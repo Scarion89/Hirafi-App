@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, View, ScrollView, Pressable, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 import { colors, radius, spacing } from '../../constants/theme';
 import { useBookings } from '../../store/bookings';
 
@@ -16,6 +17,7 @@ const MENU = [
 
 export default function Profile() {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
   const { bookings } = useBookings();
 
   return (
@@ -65,6 +67,17 @@ export default function Profile() {
         </Pressable>
       </View>
 
+      {/* Dev access links */}
+      <View style={styles.devSection}>
+        <Text style={styles.devLabel}>SWITCH MODE</Text>
+        <Pressable style={styles.devBtn} onPress={() => router.push('/worker-app')}>
+          <Text style={styles.devBtnText}>🔧 Worker App</Text>
+        </Pressable>
+        <Pressable style={styles.devBtn} onPress={() => router.push('/admin')}>
+          <Text style={styles.devBtnText}>📊 Admin Dashboard</Text>
+        </Pressable>
+      </View>
+
       <Text style={styles.version}>hirafi v1.0.0 · Customer App</Text>
     </ScrollView>
   );
@@ -101,5 +114,13 @@ const styles = StyleSheet.create({
   menuEmoji: { fontSize: 18 },
   menuLabel: { flex: 1, fontSize: 15, fontWeight: '600', color: colors.text },
   chevron: { fontSize: 20, color: colors.textMuted },
+  devSection: { marginHorizontal: spacing.lg, marginBottom: spacing.md, gap: 8 },
+  devLabel: { fontSize: 10, fontWeight: '700', color: colors.textMuted, letterSpacing: 1.2, marginBottom: 4 },
+  devBtn: {
+    height: 44, backgroundColor: colors.bgCard, borderRadius: radius.lg,
+    alignItems: 'center', justifyContent: 'center',
+    borderWidth: 1, borderColor: colors.border,
+  },
+  devBtnText: { fontSize: 14, fontWeight: '700', color: colors.textSub },
   version: { textAlign: 'center', color: colors.textMuted, fontSize: 12, marginBottom: 8 },
 });

@@ -8,20 +8,23 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <BookingsProvider>
-        <StatusBar style="dark" />
+        <StatusBar style="light" />
         <Stack
           screenOptions={{
-            headerStyle: { backgroundColor: colors.background },
+            headerStyle: { backgroundColor: colors.bg },
             headerShadowVisible: false,
             headerTintColor: colors.text,
-            headerTitleStyle: { fontWeight: '700' },
-            contentStyle: { backgroundColor: colors.background },
+            headerTitleStyle: { fontWeight: '700', color: colors.text },
+            contentStyle: { backgroundColor: colors.bg },
           }}
         >
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="splash" options={{ headerShown: false }} />
           <Stack.Screen name="category/[id]" options={{ title: '' }} />
-          <Stack.Screen name="provider/[id]" options={{ title: '', headerTransparent: true }} />
-          <Stack.Screen name="booking/[id]" options={{ title: 'Book a visit', presentation: 'modal' }} />
+          <Stack.Screen name="worker/[id]" options={{ title: 'Worker Profile' }} />
+          <Stack.Screen name="booking/[id]" options={{ title: 'Confirm booking' }} />
+          <Stack.Screen name="tracking" options={{ title: 'Active Job' }} />
+          <Stack.Screen name="rating" options={{ title: 'Rate your pro', presentation: 'modal' }} />
         </Stack>
       </BookingsProvider>
     </SafeAreaProvider>

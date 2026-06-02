@@ -1,43 +1,56 @@
 import { Tabs } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
+import { Text, View } from 'react-native';
 import { colors } from '../../constants/theme';
+
+function TabIcon({ emoji, label, focused }) {
+  return (
+    <View style={{ alignItems: 'center', paddingTop: 6 }}>
+      <Text style={{ fontSize: 20 }}>{emoji}</Text>
+      <Text style={{ fontSize: 10, fontWeight: '600', color: focused ? colors.primary : colors.textMuted, marginTop: 2 }}>
+        {label}
+      </Text>
+      {focused ? (
+        <View style={{ position: 'absolute', top: -1, width: 32, height: 3, borderRadius: 2, backgroundColor: colors.primary }} />
+      ) : null}
+    </View>
+  );
+}
 
 export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.textMuted,
+        tabBarShowLabel: false,
         tabBarStyle: {
-          backgroundColor: colors.surface,
+          backgroundColor: colors.bgCard,
           borderTopColor: colors.border,
-          height: 60,
-          paddingBottom: 8,
-          paddingTop: 6,
+          height: 83,
         },
-        tabBarLabelStyle: { fontSize: 11, fontWeight: '600' },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color, size }) => <Ionicons name="home" size={size} color={color} />,
+          tabBarIcon: ({ focused }) => <TabIcon emoji="🏠" label="Home" focused={focused} />,
+        }}
+      />
+      <Tabs.Screen
+        name="services"
+        options={{
+          tabBarIcon: ({ focused }) => <TabIcon emoji="📋" label="Services" focused={focused} />,
         }}
       />
       <Tabs.Screen
         name="bookings"
         options={{
-          title: 'Bookings',
-          tabBarIcon: ({ color, size }) => <Ionicons name="calendar" size={size} color={color} />,
+          tabBarIcon: ({ focused }) => <TabIcon emoji="📅" label="Bookings" focused={focused} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Profile',
-          tabBarIcon: ({ color, size }) => <Ionicons name="person" size={size} color={color} />,
+          tabBarIcon: ({ focused }) => <TabIcon emoji="👤" label="Profile" focused={focused} />,
         }}
       />
     </Tabs>

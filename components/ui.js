@@ -1,9 +1,8 @@
 import React from 'react';
 import { Text, View, Pressable, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { colors, radius, spacing, shadow } from '../constants/theme';
 
-export function Button({ title, onPress, variant = 'primary', icon, style }) {
+export function Button({ title, onPress, variant = 'primary', style, icon }) {
   const isPrimary = variant === 'primary';
   return (
     <Pressable
@@ -11,19 +10,12 @@ export function Button({ title, onPress, variant = 'primary', icon, style }) {
       style={({ pressed }) => [
         styles.btn,
         isPrimary ? styles.btnPrimary : styles.btnGhost,
-        pressed && { opacity: 0.85 },
+        pressed && { opacity: 0.8 },
         style,
       ]}
     >
-      {icon ? (
-        <Ionicons
-          name={icon}
-          size={18}
-          color={isPrimary ? '#fff' : colors.primary}
-          style={{ marginRight: 8 }}
-        />
-      ) : null}
-      <Text style={[styles.btnText, { color: isPrimary ? '#fff' : colors.primary }]}>
+      {icon ? <Text style={{ marginRight: 8, fontSize: 16 }}>{icon}</Text> : null}
+      <Text style={[styles.btnText, { color: isPrimary ? '#000' : colors.primary }]}>
         {title}
       </Text>
     </Pressable>
@@ -34,56 +26,59 @@ export function Card({ children, style }) {
   return <View style={[styles.card, style]}>{children}</View>;
 }
 
-export function Rating({ value, reviews, size = 14 }) {
+export function Stars({ value = 5, size = 13 }) {
+  return <Text style={{ fontSize: size, color: colors.primary }}>{'⭐'.repeat(value)}</Text>;
+}
+
+export function Chip({ label, active, onPress }) {
   return (
-    <View style={styles.row}>
-      <Ionicons name="star" size={size} color={colors.star} />
-      <Text style={styles.ratingText}>{value.toFixed(1)}</Text>
-      {reviews != null ? (
-        <Text style={styles.ratingMuted}>({reviews})</Text>
-      ) : null}
-    </View>
+    <Pressable
+      onPress={onPress}
+      style={[styles.chip, active && styles.chipActive]}
+    >
+      <Text style={[styles.chipText, active && styles.chipTextActive]}>{label}</Text>
+    </Pressable>
   );
 }
 
-export function Badge({ label, color = colors.success, bg }) {
-  return (
-    <View style={[styles.badge, { backgroundColor: bg || colors.primaryLight }]}>
-      <View style={[styles.dot, { backgroundColor: color }]} />
-      <Text style={[styles.badgeText, { color }]}>{label}</Text>
-    </View>
-  );
+export function SectionLabel({ text }) {
+  return <Text style={styles.sectionLabel}>{text}</Text>;
 }
 
 const styles = StyleSheet.create({
-  row: { flexDirection: 'row', alignItems: 'center' },
   btn: {
-    flexDirection: 'row',
+    height: 56,
+    borderRadius: radius.lg,
     alignItems: 'center',
     justifyContent: 'center',
-    height: 52,
-    borderRadius: radius.md,
-    paddingHorizontal: spacing.lg,
+    flexDirection: 'row',
   },
   btnPrimary: { backgroundColor: colors.primary },
-  btnGhost: { backgroundColor: colors.primaryLight },
+  btnGhost: { backgroundColor: colors.bgCardAlt, borderWidth: 1, borderColor: colors.border },
   btnText: { fontSize: 16, fontWeight: '700' },
   card: {
-    backgroundColor: colors.surface,
+    backgroundColor: colors.bgCard,
     borderRadius: radius.lg,
     padding: spacing.lg,
     ...shadow.card,
   },
-  ratingText: { marginLeft: 4, fontWeight: '700', color: colors.text, fontSize: 13 },
-  ratingMuted: { marginLeft: 3, color: colors.textMuted, fontSize: 12 },
-  badge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
+  chip: {
+    paddingHorizontal: 14,
+    paddingVertical: 8,
     borderRadius: radius.pill,
-    alignSelf: 'flex-start',
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.bgCard,
+    marginRight: 8,
   },
-  dot: { width: 6, height: 6, borderRadius: 3, marginRight: 6 },
-  badgeText: { fontSize: 12, fontWeight: '700' },
+  chipActive: { backgroundColor: colors.primaryMuted, borderColor: colors.primary },
+  chipText: { fontSize: 13, fontWeight: '600', color: colors.textMuted },
+  chipTextActive: { color: colors.primary },
+  sectionLabel: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: colors.textMuted,
+    letterSpacing: 1.2,
+    marginBottom: spacing.sm,
+  },
 });

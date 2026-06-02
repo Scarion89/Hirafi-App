@@ -1,163 +1,163 @@
-import React, { useState, useMemo } from 'react';
-import {
-  Text, View, ScrollView, Pressable, StyleSheet, TextInput, FlatList,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import React, { useState } from 'react';
+import { Text, View, ScrollView, Pressable, StyleSheet, TextInput } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, radius, spacing, shadow } from '../../constants/theme';
-import { categories, providers } from '../../data/services';
-import ProviderCard from '../../components/ProviderCard';
+import { categories, featuredWorker } from '../../data/services';
 
 export default function Home() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const [query, setQuery] = useState('');
 
-  const topRated = useMemo(
-    () => [...providers].sort((a, b) => b.rating - a.rating).slice(0, 4),
-    []
-  );
-
-  const filtered = useMemo(() => {
-    if (!query.trim()) return null;
-    const q = query.toLowerCase();
-    return providers.filter(
-      (p) =>
-        p.name.toLowerCase().includes(q) ||
-        p.title.toLowerCase().includes(q) ||
-        p.services.some((s) => s.toLowerCase().includes(q))
-    );
-  }, [query]);
-
   return (
-    <ScrollView
-      style={{ flex: 1, backgroundColor: colors.background }}
-      contentContainerStyle={{ paddingBottom: 32 }}
-      showsVerticalScrollIndicator={false}
-    >
-      <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-        <View style={styles.headerTop}>
+    <View style={[styles.root, { paddingTop: insets.top }]}>
+      {/* Top bar */}
+      <View style={styles.topBar}>
+        <View style={styles.logoRow}>
+          <Text style={styles.logoMark}>⌂</Text>
           <View>
-            <Text style={styles.greeting}>Welcome back 👋</Text>
-            <Text style={styles.location}>
-              <Ionicons name="location" size={14} color="#fff" /> Downtown, Apt 4B
-            </Text>
-          </View>
-          <View style={styles.bell}>
-            <Ionicons name="notifications-outline" size={22} color="#fff" />
+            <Text style={styles.greeting}>Hi, Ahmed</Text>
           </View>
         </View>
-        <Text style={styles.hero}>What service do you need today?</Text>
+        <View style={styles.bell}>
+          <Text style={styles.bellEmoji}>🔔</Text>
+          <View style={styles.bellDot} />
+        </View>
+      </View>
+
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {/* Search */}
         <View style={styles.search}>
-          <Ionicons name="search" size={18} color={colors.textMuted} />
+          <Text style={styles.searchIcon}>🔍</Text>
           <TextInput
-            placeholder="Search services or pros…"
+            placeholder="Search for a service…"
             placeholderTextColor={colors.textMuted}
             value={query}
             onChangeText={setQuery}
             style={styles.searchInput}
           />
         </View>
-      </View>
 
-      {filtered ? (
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>
-            {filtered.length} result{filtered.length === 1 ? '' : 's'}
-          </Text>
-          {filtered.map((p) => (
-            <ProviderCard key={p.id} provider={p} />
-          ))}
-          {filtered.length === 0 ? (
-            <Text style={styles.empty}>No pros match “{query}”.</Text>
-          ) : null}
+        {/* Promo banner */}
+        <View style={styles.promo}>
+          <Text style={styles.promoLabel}>FIRST BOOKING OFFER</Text>
+          <Text style={styles.promoTitle}>20% off your first job</Text>
+          <Text style={styles.promoSub}>Vetted craftsmen · Upfront pricing · Guaranteed</Text>
         </View>
-      ) : (
-        <>
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Categories</Text>
-            <FlatList
-              data={categories}
-              numColumns={3}
-              scrollEnabled={false}
-              keyExtractor={(c) => c.id}
-              columnWrapperStyle={{ justifyContent: 'space-between' }}
-              renderItem={({ item }) => (
-                <Pressable
-                  onPress={() => router.push(`/category/${item.id}`)}
-                  style={({ pressed }) => [styles.cat, pressed && { opacity: 0.85 }]}
-                >
-                  <View style={[styles.catIcon, { backgroundColor: item.color + '22' }]}>
-                    <Ionicons name={item.icon} size={24} color={item.color} />
-                  </View>
-                  <Text style={styles.catName}>{item.name}</Text>
-                </Pressable>
-              )}
-            />
-          </View>
 
-          <View style={styles.promo}>
+        {/* Quick Services */}
+        <View style={styles.sectionHead}>
+          <Text style={styles.sectionTitle}>Quick Services</Text>
+          <Pressable>
+            <Text style={styles.seeAll}>See all</Text>
+          </Pressable>
+        </View>
+
+        <View style={styles.catGrid}>
+          {categories.map((cat) => (
+            <Pressable
+              key={cat.id}
+              onPress={() => router.push(`/category/${cat.id}`)}
+              style={({ pressed }) => [styles.catCard, pressed && { opacity: 0.8 }]}
+            >
+              <View style={styles.catIconBg}>
+                <Text style={styles.catEmoji}>{cat.emoji}</Text>
+              </View>
+              <Text style={styles.catName}>{cat.name}</Text>
+              <Text style={styles.catCount}>{cat.count} pros</Text>
+            </Pressable>
+          ))}
+        </View>
+
+        {/* Top rated */}
+        <Text style={[styles.sectionTitle, { paddingHorizontal: spacing.lg, marginTop: spacing.xl }]}>
+          Top-Rated This Week
+        </Text>
+        <Pressable
+          onPress={() => router.push(`/worker/${featuredWorker.id}`)}
+          style={({ pressed }) => [styles.featuredCard, pressed && { opacity: 0.85 }]}
+        >
+          <View style={styles.favRow}>
+            <View style={styles.featuredAvatar}>
+              <Text style={styles.featuredInitials}>{featuredWorker.initials}</Text>
+              <View style={styles.verifiedBadge}>
+                <Text style={styles.verifiedCheck}>✓</Text>
+              </View>
+            </View>
             <View style={{ flex: 1 }}>
-              <Text style={styles.promoTitle}>20% off first booking</Text>
-              <Text style={styles.promoSub}>Use code HIRAFI20 at checkout</Text>
+              <Text style={styles.featuredName}>{featuredWorker.name}</Text>
+              <Text style={styles.featuredTitle}>{featuredWorker.title} · {featuredWorker.experience}</Text>
+              <Text style={styles.featuredMeta}>
+                ⭐ {featuredWorker.rating} · {featuredWorker.jobs} jobs · {featuredWorker.location}
+              </Text>
             </View>
-            <Ionicons name="pricetag" size={40} color="#fff" style={{ opacity: 0.9 }} />
           </View>
+        </Pressable>
 
-          <View style={styles.section}>
-            <View style={styles.sectionHead}>
-              <Text style={styles.sectionTitle}>Top rated pros</Text>
-            </View>
-            {topRated.map((p) => (
-              <ProviderCard key={p.id} provider={p} />
-            ))}
-          </View>
-        </>
-      )}
-    </ScrollView>
+        <View style={{ height: 24 }} />
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  header: {
-    backgroundColor: colors.primary,
-    paddingHorizontal: spacing.lg,
-    paddingBottom: spacing.xl,
-    borderBottomLeftRadius: 28,
-    borderBottomRightRadius: 28,
+  root: { flex: 1, backgroundColor: colors.bg },
+  topBar: {
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+    paddingHorizontal: spacing.lg, paddingVertical: spacing.md,
   },
-  headerTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  greeting: { color: '#fff', fontSize: 18, fontWeight: '800' },
-  location: { color: '#D6EFE8', fontSize: 13, marginTop: 4 },
-  bell: {
-    width: 42, height: 42, borderRadius: 21,
-    backgroundColor: 'rgba(255,255,255,0.18)',
-    alignItems: 'center', justifyContent: 'center',
-  },
-  hero: { color: '#fff', fontSize: 22, fontWeight: '800', marginTop: spacing.lg, lineHeight: 30 },
+  logoRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  logoMark: { fontSize: 22, color: colors.primary },
+  greeting: { fontSize: 20, fontWeight: '800', color: colors.text },
+  bell: { position: 'relative', width: 40, height: 40, backgroundColor: colors.bgCard, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
+  bellEmoji: { fontSize: 18 },
+  bellDot: { position: 'absolute', top: 6, right: 6, width: 10, height: 10, borderRadius: 5, backgroundColor: colors.primary, borderWidth: 2, borderColor: colors.bg },
   search: {
-    flexDirection: 'row', alignItems: 'center',
-    backgroundColor: '#fff', borderRadius: radius.md,
-    paddingHorizontal: spacing.md, height: 50, marginTop: spacing.lg,
-    ...shadow.card,
+    flexDirection: 'row', alignItems: 'center', backgroundColor: colors.bgCard,
+    marginHorizontal: spacing.lg, borderRadius: radius.lg, paddingHorizontal: spacing.md,
+    height: 50, marginBottom: spacing.lg, borderWidth: 1, borderColor: colors.border,
   },
-  searchInput: { flex: 1, marginLeft: 8, fontSize: 15, color: colors.text },
-  section: { paddingHorizontal: spacing.lg, marginTop: spacing.xl },
-  sectionHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  sectionTitle: { fontSize: 18, fontWeight: '800', color: colors.text, marginBottom: spacing.md },
-  cat: { width: '31%', alignItems: 'center', marginBottom: spacing.lg },
-  catIcon: {
-    width: 60, height: 60, borderRadius: radius.lg,
-    alignItems: 'center', justifyContent: 'center', marginBottom: 6,
-  },
-  catName: { fontSize: 12, fontWeight: '600', color: colors.text, textAlign: 'center' },
+  searchIcon: { fontSize: 16, marginRight: 8 },
+  searchInput: { flex: 1, fontSize: 15, color: colors.text },
   promo: {
-    flexDirection: 'row', alignItems: 'center',
-    backgroundColor: colors.accent, marginHorizontal: spacing.lg,
-    marginTop: spacing.xl, borderRadius: radius.lg, padding: spacing.lg,
+    marginHorizontal: spacing.lg, borderRadius: radius.lg, padding: spacing.lg,
+    backgroundColor: colors.bgCard, borderWidth: 1, borderColor: colors.primaryMuted,
+    marginBottom: spacing.xl,
   },
-  promoTitle: { color: '#fff', fontSize: 17, fontWeight: '800' },
-  promoSub: { color: '#fff', opacity: 0.9, fontSize: 13, marginTop: 4 },
-  empty: { color: colors.textMuted, fontSize: 14, marginTop: spacing.md },
+  promoLabel: { fontSize: 10, fontWeight: '700', color: colors.primary, letterSpacing: 1.5, marginBottom: 6 },
+  promoTitle: { fontSize: 22, fontWeight: '800', color: colors.text, marginBottom: 4 },
+  promoSub: { fontSize: 13, color: colors.textMuted },
+  sectionHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: spacing.lg, marginBottom: spacing.md },
+  sectionTitle: { fontSize: 18, fontWeight: '800', color: colors.text },
+  seeAll: { fontSize: 14, fontWeight: '700', color: colors.primary },
+  catGrid: { flexDirection: 'row', flexWrap: 'wrap', paddingHorizontal: spacing.lg, gap: 12 },
+  catCard: {
+    width: '47%', backgroundColor: colors.bgCard, borderRadius: radius.lg,
+    padding: spacing.md, borderWidth: 1, borderColor: colors.border,
+  },
+  catIconBg: { width: 44, height: 44, borderRadius: radius.md, backgroundColor: colors.bgMuted, alignItems: 'center', justifyContent: 'center', marginBottom: 8 },
+  catEmoji: { fontSize: 22 },
+  catName: { fontSize: 15, fontWeight: '700', color: colors.text },
+  catCount: { fontSize: 12, color: colors.textMuted, marginTop: 2 },
+  featuredCard: {
+    marginHorizontal: spacing.lg, backgroundColor: colors.bgCard,
+    borderRadius: radius.lg, padding: spacing.lg, borderWidth: 1, borderColor: colors.border,
+    marginTop: spacing.md, ...shadow.card,
+  },
+  favRow: { flexDirection: 'row', gap: 12, alignItems: 'center' },
+  featuredAvatar: { position: 'relative', width: 64, height: 64 },
+  featuredInitials: {
+    width: 64, height: 64, borderRadius: 32, backgroundColor: colors.bgMuted,
+    textAlign: 'center', lineHeight: 64, fontSize: 20, fontWeight: '800', color: colors.text,
+  },
+  verifiedBadge: {
+    position: 'absolute', bottom: -2, right: -2, width: 22, height: 22, borderRadius: 11,
+    backgroundColor: colors.success, alignItems: 'center', justifyContent: 'center',
+    borderWidth: 2, borderColor: colors.bgCard,
+  },
+  verifiedCheck: { color: '#fff', fontSize: 11, fontWeight: '800' },
+  featuredName: { fontSize: 16, fontWeight: '800', color: colors.text },
+  featuredTitle: { fontSize: 13, color: colors.textMuted, marginTop: 2 },
+  featuredMeta: { fontSize: 12, color: colors.textSub, marginTop: 4 },
 });

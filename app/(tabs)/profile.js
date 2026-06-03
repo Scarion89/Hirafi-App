@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { colors, radius, spacing } from '../../constants/theme';
 import { useBookings } from '../../store/bookings';
+import { useAuth } from '../../store/auth';
 
 const MENU = [
   { emoji: '👤', label: 'Edit profile' },
@@ -19,16 +20,24 @@ export default function Profile() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { bookings } = useBookings();
+  const { user, logout } = useAuth();
+
+  const displayName = user?.name || 'Ahmed Hassan';
+  const initials = displayName.split(' ').map((w) => w[0]).join('').toUpperCase().slice(0, 2);
+  const roleBadge = user?.role === 'pro' ? '👷 Pro Account' : '🏠 Customer';
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.bg }} contentContainerStyle={{ paddingBottom: 32 }}>
       {/* Hero */}
       <View style={[styles.hero, { paddingTop: insets.top + 20 }]}>
         <View style={styles.avatar}>
-          <Text style={styles.avatarText}>AH</Text>
+          <Text style={styles.avatarText}>{initials}</Text>
         </View>
-        <Text style={styles.name}>Ahmed Hassan</Text>
-        <Text style={styles.email}>ahmed.hassan@gmail.com</Text>
+        <Text style={styles.name}>{displayName}</Text>
+        <View style={styles.rolePill}>
+          <Text style={styles.roleText}>{roleBadge}</Text>
+        </View>
+        {user?.phone && <Text style={styles.email}>+20 {user.phone}</Text>}
 
         <View style={styles.statsRow}>
           <View style={styles.stat}>
@@ -59,7 +68,10 @@ export default function Profile() {
             <Text style={styles.chevron}>›</Text>
           </Pressable>
         ))}
-        <Pressable style={({ pressed }) => [styles.menuRow, pressed && { opacity: 0.6 }]}>
+        <Pressable
+          style={({ pressed }) => [styles.menuRow, pressed && { opacity: 0.6 }]}
+          onPress={() => { logout(); router.replace('/auth/welcome'); }}
+        >
           <View style={[styles.menuIcon, { backgroundColor: colors.dangerBg }]}>
             <Text style={styles.menuEmoji}>🚪</Text>
           </View>
@@ -97,7 +109,13 @@ const styles = StyleSheet.create({
   },
   avatarText: { fontSize: 28, fontWeight: '800', color: colors.primary },
   name: { fontSize: 20, fontWeight: '800', color: colors.text, marginTop: spacing.md },
-  email: { fontSize: 13, color: colors.textMuted, marginTop: 2 },
+  rolePill: {
+    marginTop: 6, paddingHorizontal: 12, paddingVertical: 4,
+    backgroundColor: colors.primaryMuted, borderRadius: radius.pill,
+    borderWidth: 1, borderColor: colors.primary,
+  },
+  roleText: { fontSize: 12, fontWeight: '700', color: colors.primary },
+  email: { fontSize: 13, color: colors.textMuted, marginTop: 4 },
   statsRow: {
     flexDirection: 'row', marginTop: spacing.lg,
     backgroundColor: colors.bgMuted, borderRadius: radius.lg,

@@ -95,6 +95,27 @@ export default function Home() {
           </View>
         </Pressable>
 
+        {/* Quick access to new screens */}
+        <Text style={styles.demoLabel}>EXPLORE SCREENS</Text>
+        <View style={styles.demoRow}>
+          <Pressable style={styles.demoBtn} onPress={() => router.push({ pathname: '/tracking', params: { workerId: 'w1' } })}>
+            <Text style={styles.demoEmoji}>📍</Text>
+            <Text style={styles.demoBtnText}>Tracking</Text>
+          </Pressable>
+          <Pressable style={styles.demoBtn} onPress={() => router.push({ pathname: '/rating', params: { workerId: 'w1' } })}>
+            <Text style={styles.demoEmoji}>⭐</Text>
+            <Text style={styles.demoBtnText}>Rate Job</Text>
+          </Pressable>
+          <Pressable style={styles.demoBtn} onPress={() => router.push('/worker-app')}>
+            <Text style={styles.demoEmoji}>🔧</Text>
+            <Text style={styles.demoBtnText}>Worker App</Text>
+          </Pressable>
+          <Pressable style={styles.demoBtn} onPress={() => router.push('/admin')}>
+            <Text style={styles.demoEmoji}>📊</Text>
+            <Text style={styles.demoBtnText}>Admin</Text>
+          </Pressable>
+        </View>
+
         <View style={{ height: 24 }} />
       </ScrollView>
     </View>
@@ -160,4 +181,12 @@ const styles = StyleSheet.create({
   featuredName: { fontSize: 16, fontWeight: '800', color: colors.text },
   featuredTitle: { fontSize: 13, color: colors.textMuted, marginTop: 2 },
   featuredMeta: { fontSize: 12, color: colors.textSub, marginTop: 4 },
+  demoLabel: { fontSize: 10, fontWeight: '700', color: colors.textMuted, letterSpacing: 1.2, paddingHorizontal: spacing.lg, marginBottom: spacing.sm },
+  demoRow: { flexDirection: 'row', paddingHorizontal: spacing.lg, gap: spacing.sm, marginBottom: spacing.sm },
+  demoBtn: {
+    flex: 1, backgroundColor: colors.bgCard, borderRadius: radius.lg, padding: spacing.sm,
+    alignItems: 'center', borderWidth: 1, borderColor: colors.border,
+  },
+  demoEmoji: { fontSize: 22, marginBottom: 4 },
+  demoBtnText: { fontSize: 10, fontWeight: '700', color: colors.textSub, textAlign: 'center' },
 });

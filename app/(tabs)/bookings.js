@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Text, View, ScrollView, Pressable, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 import { colors, radius, spacing } from '../../constants/theme';
 import { useBookings } from '../../store/bookings';
 
@@ -8,6 +9,7 @@ const TABS = ['upcoming', 'cancelled'];
 
 export default function Bookings() {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
   const { bookings, cancelBooking } = useBookings();
   const [tab, setTab] = useState('upcoming');
 
@@ -16,6 +18,21 @@ export default function Bookings() {
   return (
     <View style={[styles.root, { paddingTop: insets.top }]}>
       <Text style={styles.title}>My Bookings</Text>
+
+      {/* Active job banner — shown when there are upcoming bookings */}
+      {bookings.some((b) => b.status === 'upcoming') && (
+        <Pressable
+          style={styles.activeBanner}
+          onPress={() => router.push({ pathname: '/tracking', params: { workerId: bookings.find((b) => b.status === 'upcoming')?.workerId || 'w1' } })}
+        >
+          <View style={styles.activeDotOuter}><View style={styles.activeDot} /></View>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.activeBannerTitle}>Worker is on the way</Text>
+            <Text style={styles.activeBannerSub}>Tap to track live location →</Text>
+          </View>
+          <Text style={styles.activeBannerArrow}>›</Text>
+        </Pressable>
+      )}
 
       <View style={styles.tabsBar}>
         {TABS.map((t) => (
@@ -99,4 +116,15 @@ const styles = StyleSheet.create({
   emptyEmoji: { fontSize: 48 },
   emptyTitle: { fontSize: 18, fontWeight: '700', color: colors.text, marginTop: spacing.md },
   emptySub: { fontSize: 14, color: colors.textMuted, marginTop: 4 },
+  activeBanner: {
+    flexDirection: 'row', alignItems: 'center', gap: spacing.sm,
+    marginHorizontal: spacing.lg, marginBottom: spacing.md,
+    backgroundColor: colors.primaryMuted, borderRadius: radius.lg, padding: spacing.md,
+    borderWidth: 1, borderColor: colors.primary,
+  },
+  activeDotOuter: { width: 16, height: 16, borderRadius: 8, backgroundColor: colors.primary + '44', alignItems: 'center', justifyContent: 'center' },
+  activeDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: colors.primary },
+  activeBannerTitle: { fontSize: 14, fontWeight: '700', color: colors.primary },
+  activeBannerSub: { fontSize: 12, color: colors.textMuted, marginTop: 2 },
+  activeBannerArrow: { fontSize: 24, color: colors.primary },
 });

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, View, ScrollView, Pressable, StyleSheet, Alert } from 'react-native';
+import { Text, View, ScrollView, Pressable, StyleSheet } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, radius, spacing } from '../../constants/theme';
@@ -31,11 +31,7 @@ export default function BookingConfirm() {
       address: 'Madinaty, Group 64, Building 12, Apt 8',
       price: w.basePrice,
     });
-    Alert.alert(
-      'Booking confirmed!',
-      `${w.name} is booked for ${date} at ${time}.`,
-      [{ text: 'View bookings', onPress: () => router.replace('/bookings') }]
-    );
+    router.replace({ pathname: '/tracking', params: { workerId: w.id } });
   };
 
   return (

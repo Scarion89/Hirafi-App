@@ -25,9 +25,6 @@ export default function RootLayout() {
           <Stack.Screen name="booking/[id]" options={{ title: 'Confirm booking' }} />
           <Stack.Screen name="tracking" options={{ title: 'Active Job' }} />
           <Stack.Screen name="rating" options={{ title: 'Rate your pro', presentation: 'modal' }} />
-          <Stack.Screen name="worker-app/index" options={{ headerShown: false }} />
-          <Stack.Screen name="worker-app/job-request" options={{ headerShown: false, presentation: 'modal' }} />
-          <Stack.Screen name="worker-app/job-complete" options={{ headerShown: false }} />
           <Stack.Screen name="worker-app" options={{ headerShown: false }} />
           <Stack.Screen name="admin" options={{ headerShown: false }} />
         </Stack>

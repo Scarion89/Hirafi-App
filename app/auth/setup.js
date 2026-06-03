@@ -29,7 +29,11 @@ export default function SetupScreen() {
       role,
       ...(isPro ? { specialty, area } : { area }),
     });
-    router.replace('/(tabs)');
+    if (role === 'pro') {
+      router.replace('/worker-app');
+    } else {
+      router.replace('/(tabs)');
+    }
   }
 
   const canSubmit = isPro

@@ -32,6 +32,11 @@ export default function RootLayout() {
             <Stack.Screen name="rating" options={{ title: 'Rate your pro', presentation: 'modal' }} />
             <Stack.Screen name="worker-app" options={{ headerShown: false }} />
             <Stack.Screen name="admin" options={{ headerShown: false }} />
+            <Stack.Screen name="notifications" options={{ headerShown: false }} />
+            <Stack.Screen name="profile/edit" options={{ title: 'Edit Profile', presentation: 'modal', headerShown: false }} />
+            <Stack.Screen name="profile/payment" options={{ title: 'Payment', presentation: 'modal', headerShown: false }} />
+            <Stack.Screen name="profile/addresses" options={{ title: 'Addresses', presentation: 'modal', headerShown: false }} />
+            <Stack.Screen name="profile/help" options={{ title: 'Help', presentation: 'modal', headerShown: false }} />
           </Stack>
         </BookingsProvider>
       </AuthProvider>

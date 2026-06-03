@@ -57,7 +57,7 @@ export default function Home() {
           <Text style={styles.logoMark}>⌂</Text>
           <Text style={styles.greeting}>Hi, {firstName} 👋</Text>
         </View>
-        <Pressable style={styles.bell}>
+        <Pressable style={styles.bell} onPress={() => router.push('/notifications')}>
           <Text style={styles.bellEmoji}>🔔</Text>
           <View style={styles.bellDot} />
         </Pressable>

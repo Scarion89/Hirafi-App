@@ -7,13 +7,13 @@ import { useBookings } from '../../store/bookings';
 import { useAuth } from '../../store/auth';
 
 const MENU = [
-  { emoji: '👤', label: 'Edit profile' },
-  { emoji: '💳', label: 'Payment methods' },
-  { emoji: '📍', label: 'Saved addresses' },
-  { emoji: '❤️', label: 'Favorite workers' },
-  { emoji: '🔔', label: 'Notifications' },
-  { emoji: '🛡️', label: 'hirafi guarantee' },
-  { emoji: '💬', label: 'Help & support' },
+  { emoji: '👤', label: 'Edit profile', route: '/profile/edit' },
+  { emoji: '💳', label: 'Payment methods', route: '/profile/payment' },
+  { emoji: '📍', label: 'Saved addresses', route: '/profile/addresses' },
+  { emoji: '❤️', label: 'Favorite workers', route: null },
+  { emoji: '🔔', label: 'Notifications', route: '/notifications' },
+  { emoji: '🛡️', label: 'hirafi guarantee', route: null },
+  { emoji: '💬', label: 'Help & support', route: '/profile/help' },
 ];
 
 export default function Profile() {
@@ -60,7 +60,11 @@ export default function Profile() {
       {/* Menu */}
       <View style={styles.menu}>
         {MENU.map((item) => (
-          <Pressable key={item.label} style={({ pressed }) => [styles.menuRow, pressed && { opacity: 0.6 }]}>
+          <Pressable
+            key={item.label}
+            style={({ pressed }) => [styles.menuRow, pressed && { opacity: 0.6 }]}
+            onPress={() => item.route && router.push(item.route)}
+          >
             <View style={styles.menuIcon}>
               <Text style={styles.menuEmoji}>{item.emoji}</Text>
             </View>

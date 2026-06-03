@@ -6,8 +6,7 @@ import { colors, radius, spacing } from '../../constants/theme';
 import { getWorker } from '../../data/services';
 import { useBookings } from '../../store/bookings';
 
-const TIMES = ['2:00 PM', '4:00 PM', '6:00 PM', '8:00 AM', '10:00 AM', '12:00 PM'];
-const DATES = ['Today', 'Tomorrow', 'Sat 8', 'Sun 9', 'Mon 10'];
+const AVATAR_COLORS = ['#3D2E10', '#1A2E1A', '#1A1A2E', '#2E1A2E'];
 
 export default function BookingConfirm() {
   const { id } = useLocalSearchParams();
@@ -16,10 +15,12 @@ export default function BookingConfirm() {
   const { addBooking } = useBookings();
   const w = getWorker(id);
 
-  const [date, setDate] = useState('Today');
-  const [time, setTime] = useState('4:00 PM');
+  const [date] = useState('Today');
+  const [time] = useState('ASAP');
 
   if (!w) return null;
+
+  const avatarBg = AVATAR_COLORS[0];
 
   const confirm = () => {
     addBooking({
@@ -35,101 +36,85 @@ export default function BookingConfirm() {
   };
 
   return (
-    <View style={styles.root}>
-      <ScrollView contentContainerStyle={{ padding: spacing.lg, paddingBottom: 100 }}>
+    <View style={[styles.root, { paddingTop: insets.top }]}>
+      {/* Top bar */}
+      <View style={styles.topBar}>
+        <Pressable onPress={() => router.back()} style={styles.backBtn}>
+          <Text style={styles.backArrow}>←</Text>
+        </Pressable>
+        <Text style={styles.topTitle}>Confirm booking</Text>
+        <View style={{ width: 36 }} />
+      </View>
 
-        {/* Service row */}
-        <View style={styles.card}>
-          <Text style={styles.rowLabel}>SERVICE</Text>
-          <View style={styles.svcRow}>
-            <Text style={styles.svcEmoji}>🔧</Text>
-            <View>
-              <Text style={styles.svcName}>Pipe leak repair</Text>
-              <Text style={styles.svcSub}>Plumbing · 1-2 hours</Text>
-            </View>
-          </View>
-        </View>
-
+      <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Worker row */}
+        <View style={styles.workerRow}>
+          <View style={[styles.workerAvatar, { backgroundColor: avatarBg }]}>
+            <Text style={styles.workerInitials}>{w.initials}</Text>
+          </View>
+          <View style={styles.workerInfo}>
+            <Text style={styles.workerName}>{w.name}</Text>
+            <Text style={styles.workerSub}>{w.title} · ⭐ {w.rating}</Text>
+          </View>
+          <Pressable style={styles.chatBtn}>
+            <Text style={styles.chatEmoji}>💬</Text>
+          </Pressable>
+        </View>
+
+        {/* JOB card */}
         <View style={styles.card}>
-          <Text style={styles.rowLabel}>WORKER</Text>
-          <View style={styles.svcRow}>
-            <View style={styles.smAvatar}>
-              <Text style={styles.smInitials}>{w.initials}</Text>
-            </View>
-            <View>
-              <Text style={styles.svcName}>{w.name}</Text>
-              <Text style={styles.svcSub}>⭐ {w.rating} · ✓ Verified</Text>
-            </View>
+          <View style={styles.cardHeaderRow}>
+            <Text style={styles.cardLabel}>JOB</Text>
+            <Pressable><Text style={styles.editLink}>Edit</Text></Pressable>
+          </View>
+          <Text style={styles.jobName}>Pipe leak repair</Text>
+          <Text style={styles.jobSub}>Living room · ASAP</Text>
+        </View>
+
+        {/* WHEN + WHERE row */}
+        <View style={styles.whenWhereRow}>
+          <View style={[styles.whenWhereCard, { marginRight: 6 }]}>
+            <Text style={styles.miniLabel}>WHEN</Text>
+            <Text style={styles.whenWhereVal}>Today · ASAP</Text>
+          </View>
+          <View style={[styles.whenWhereCard, { marginLeft: 6 }]}>
+            <Text style={styles.miniLabel}>WHERE</Text>
+            <Text style={styles.whenWhereVal}>Madinaty, Grp 64</Text>
           </View>
         </View>
 
-        {/* Date picker */}
-        <Text style={styles.fieldLabel}>WHEN</Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.datesRow}>
-          {DATES.map((d) => (
-            <Pressable key={d} onPress={() => setDate(d)} style={[styles.dateCell, date === d && styles.dateCellActive]}>
-              <Text style={[styles.dateCellText, date === d && styles.dateCellTextActive]}>{d}</Text>
-            </Pressable>
-          ))}
-        </ScrollView>
+        {/* ESTIMATE card */}
+        <View style={styles.card}>
+          <Text style={styles.cardLabel}>ESTIMATE</Text>
 
-        <Text style={[styles.fieldLabel, { marginTop: spacing.lg }]}>TIME</Text>
-        <View style={styles.timeGrid}>
-          {TIMES.map((t) => (
-            <Pressable key={t} onPress={() => setTime(t)} style={[styles.timeCell, time === t && styles.timeCellActive]}>
-              <Text style={[styles.timeCellText, time === t && styles.timeCellTextActive]}>{t}</Text>
-            </Pressable>
-          ))}
-        </View>
-
-        {/* Address */}
-        <View style={[styles.card, { marginTop: spacing.lg }]}>
-          <Text style={styles.rowLabel}>ADDRESS</Text>
-          <Text style={styles.svcName}>Madinaty, Group 64, Building 12, Apt 8</Text>
-          <Pressable><Text style={styles.editLink}>Edit</Text></Pressable>
-        </View>
-
-        {/* Price breakdown */}
-        <View style={[styles.card, { marginTop: spacing.md }]}>
-          <Text style={styles.rowLabel}>PRICE BREAKDOWN</Text>
-          <View style={styles.priceRow}>
-            <Text style={styles.priceLabel}>Pipe leak repair</Text>
-            <Text style={styles.priceVal}>{w.basePrice} EGP</Text>
+          <View style={styles.estimateRow}>
+            <Text style={styles.estimateLabel}>Callout · covered</Text>
+            <Text style={styles.estimateVal}>0 EGP</Text>
           </View>
-          <View style={styles.priceRow}>
-            <Text style={styles.priceLabel}>hirafi guarantee (incl.)</Text>
-            <Text style={[styles.priceVal, { color: colors.success }]}>FREE</Text>
+          <View style={styles.estimateRow}>
+            <Text style={styles.estimateLabel}>Diagnostic + repair</Text>
+            <Text style={styles.estimateVal}>180–240 EGP</Text>
+          </View>
+          <View style={styles.estimateRow}>
+            <Text style={styles.estimateLabel}>hirafi service fee</Text>
+            <Text style={styles.estimateVal}>15 EGP</Text>
+          </View>
+
+          <View style={styles.divider} />
+
+          <View style={styles.estimateRow}>
+            <Text style={styles.payLabel}>Pay after work</Text>
+            <Text style={styles.payVal}>195–255 EGP</Text>
           </View>
         </View>
-
-        {/* Total */}
-        <View style={[styles.card, styles.totalCard]}>
-          <Text style={styles.totalLabel}>TOTAL</Text>
-          <Text style={styles.totalVal}>{w.basePrice} EGP</Text>
-        </View>
-
-        {/* Payment */}
-        <View style={[styles.card, { marginTop: spacing.md }]}>
-          <Text style={styles.rowLabel}>PAYMENT</Text>
-          <View style={styles.svcRow}>
-            <Text style={styles.svcEmoji}>💵</Text>
-            <View>
-              <Text style={styles.svcName}>Cash to worker after job</Text>
-              <Text style={styles.svcSub}>No deposit · No upfront payment</Text>
-            </View>
-          </View>
-        </View>
-
-        <Text style={styles.guarantee}>
-          ✓ If anything goes wrong, hirafi fixes it at no extra cost
-        </Text>
       </ScrollView>
 
+      {/* Bottom bar */}
       <View style={[styles.footer, { paddingBottom: insets.bottom + 12 }]}>
         <Pressable onPress={confirm} style={styles.confirmBtn}>
-          <Text style={styles.confirmText}>Confirm &amp; Book</Text>
+          <Text style={styles.confirmText}>Confirm &amp; dispatch →</Text>
         </Pressable>
+        <Text style={styles.cancelNote}>Free cancellation up to 30 min before</Text>
       </View>
     </View>
   );
@@ -137,53 +122,105 @@ export default function BookingConfirm() {
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bg },
+
+  topBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: spacing.lg,
+    paddingVertical: 12,
+  },
+  backBtn: { width: 36, height: 36, alignItems: 'center', justifyContent: 'center' },
+  backArrow: { fontSize: 22, color: colors.text, fontWeight: '300' },
+  topTitle: { fontSize: 17, fontWeight: '800', color: colors.text },
+
+  scrollContent: { paddingHorizontal: spacing.lg, paddingBottom: 120 },
+
+  workerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.bgCard,
+    borderRadius: radius.lg,
+    borderWidth: 1,
+    borderColor: colors.border,
+    padding: 14,
+    marginBottom: 12,
+  },
+  workerAvatar: {
+    width: 48,
+    height: 48,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  workerInitials: { fontSize: 16, fontWeight: '800', color: colors.text },
+  workerInfo: { flex: 1, marginLeft: 12 },
+  workerName: { fontSize: 15, fontWeight: '800', color: colors.text },
+  workerSub: { fontSize: 12, color: colors.textMuted, marginTop: 2 },
+  chatBtn: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: colors.bgMuted,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  chatEmoji: { fontSize: 16 },
+
   card: {
-    backgroundColor: colors.bgCard, borderRadius: radius.lg,
-    padding: spacing.lg, marginBottom: spacing.md,
-    borderWidth: 1, borderColor: colors.border,
+    backgroundColor: colors.bgCard,
+    borderRadius: radius.lg,
+    padding: 14,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
-  rowLabel: { fontSize: 10, fontWeight: '700', color: colors.textMuted, letterSpacing: 1.2, marginBottom: 10 },
-  svcRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
-  svcEmoji: { fontSize: 28 },
-  svcName: { fontSize: 16, fontWeight: '700', color: colors.text },
-  svcSub: { fontSize: 12, color: colors.textMuted, marginTop: 2 },
-  smAvatar: {
-    width: 44, height: 44, borderRadius: 22,
-    backgroundColor: colors.bgMuted, alignItems: 'center', justifyContent: 'center',
+  cardHeaderRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 },
+  cardLabel: { fontSize: 10, fontWeight: '700', color: colors.textMuted, letterSpacing: 1.2 },
+  editLink: { fontSize: 13, fontWeight: '700', color: colors.primary },
+  jobName: { fontSize: 16, fontWeight: '800', color: colors.text },
+  jobSub: { fontSize: 13, color: colors.textMuted, marginTop: 3 },
+
+  whenWhereRow: { flexDirection: 'row', marginBottom: 12 },
+  whenWhereCard: {
+    flex: 1,
+    backgroundColor: colors.bgMuted,
+    borderRadius: 12,
+    padding: 12,
   },
-  smInitials: { fontSize: 14, fontWeight: '800', color: colors.text },
-  fieldLabel: { fontSize: 10, fontWeight: '700', color: colors.textMuted, letterSpacing: 1.2, marginBottom: spacing.sm },
-  datesRow: { marginBottom: spacing.sm },
-  dateCell: {
-    paddingHorizontal: 20, paddingVertical: 10, borderRadius: radius.md,
-    borderWidth: 1, borderColor: colors.border, backgroundColor: colors.bgCard, marginRight: 8,
-  },
-  dateCellActive: { backgroundColor: colors.primary, borderColor: colors.primary },
-  dateCellText: { fontSize: 14, fontWeight: '600', color: colors.textMuted },
-  dateCellTextActive: { color: '#000' },
-  timeGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  timeCell: {
-    paddingHorizontal: 18, paddingVertical: 10, borderRadius: radius.pill,
-    borderWidth: 1, borderColor: colors.border, backgroundColor: colors.bgCard,
-  },
-  timeCellActive: { backgroundColor: colors.primary, borderColor: colors.primary },
-  timeCellText: { fontSize: 13, fontWeight: '600', color: colors.textMuted },
-  timeCellTextActive: { color: '#000' },
-  editLink: { fontSize: 13, fontWeight: '700', color: colors.primary, marginTop: 6 },
-  priceRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 },
-  priceLabel: { fontSize: 14, color: colors.textSub },
-  priceVal: { fontSize: 14, fontWeight: '600', color: colors.text },
-  totalCard: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  totalLabel: { fontSize: 10, fontWeight: '700', color: colors.textMuted, letterSpacing: 1.2 },
-  totalVal: { fontSize: 28, fontWeight: '800', color: colors.text },
-  guarantee: { textAlign: 'center', color: colors.textMuted, fontSize: 13, marginTop: spacing.md, lineHeight: 20 },
+  miniLabel: { fontSize: 10, fontWeight: '700', color: colors.textMuted, letterSpacing: 1, marginBottom: 4 },
+  whenWhereVal: { fontSize: 14, fontWeight: '700', color: colors.text },
+
+  estimateRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 },
+  estimateLabel: { fontSize: 14, color: colors.textSub },
+  estimateVal: { fontSize: 14, fontWeight: '600', color: colors.text },
+  divider: { height: 1, backgroundColor: colors.border, marginVertical: 10 },
+  payLabel: { fontSize: 15, fontWeight: '700', color: colors.text },
+  payVal: { fontSize: 16, fontWeight: '800', color: colors.primary },
+
   footer: {
-    position: 'absolute', bottom: 0, left: 0, right: 0,
-    padding: spacing.lg, backgroundColor: colors.bg, borderTopWidth: 1, borderTopColor: colors.border,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingHorizontal: spacing.lg,
+    paddingTop: 12,
+    backgroundColor: colors.bg,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
   },
   confirmBtn: {
-    height: 56, backgroundColor: colors.primary, borderRadius: radius.lg,
-    alignItems: 'center', justifyContent: 'center',
+    height: 56,
+    backgroundColor: colors.primary,
+    borderRadius: radius.lg,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   confirmText: { fontSize: 16, fontWeight: '800', color: '#000' },
+  cancelNote: {
+    textAlign: 'center',
+    color: colors.textMuted,
+    fontSize: 12,
+    marginTop: 8,
+  },
 });

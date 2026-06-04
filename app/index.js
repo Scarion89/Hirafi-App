@@ -3,5 +3,5 @@ import { useAuth } from '../store/auth';
 
 export default function Index() {
   const { user } = useAuth();
-  return <Redirect href={user ? '/(tabs)' : '/auth/welcome'} />;
+  return <Redirect href={user ? '/(tabs)' : '/splash'} />;
 }

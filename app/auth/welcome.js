@@ -85,19 +85,19 @@ export default function WelcomeScreen() {
         <View style={[styles.rolesButtons, { paddingBottom: insets.bottom + spacing.lg }]}>
           <Pressable
             style={({ pressed }) => [styles.btnPrimary, pressed && styles.btnPressed]}
-            onPress={() => router.push('/auth/phone?role=customer')}
+            onPress={() => router.push({ pathname: '/auth/phone', params: { role: 'customer' } })}
           >
             <Text style={styles.btnPrimaryText}>I'm a Customer</Text>
           </Pressable>
           <Pressable
             style={({ pressed }) => [styles.btnOutline, pressed && styles.btnPressed]}
-            onPress={() => router.push('/auth/phone?role=pro')}
+            onPress={() => router.push({ pathname: '/auth/phone', params: { role: 'pro' } })}
           >
             <Text style={styles.btnOutlineText}>I'm a Pro</Text>
           </Pressable>
           <View style={styles.loginRow}>
             <Text style={styles.loginMuted}>Already have an account? </Text>
-            <Pressable onPress={() => router.push('/auth/phone?role=customer')}>
+            <Pressable onPress={() => router.push({ pathname: '/auth/phone', params: { role: 'customer' } })}>
               <Text style={styles.loginLink}>Log in</Text>
             </Pressable>
           </View>

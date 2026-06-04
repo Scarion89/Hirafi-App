@@ -15,7 +15,7 @@ export default function PhoneScreen() {
 
   function handleSend() {
     if (!canProceed) return;
-    router.push('/auth/otp?role=' + role + '&phone=' + phone);
+    router.push({ pathname: '/auth/otp', params: { role, phone } });
   }
 
   return (

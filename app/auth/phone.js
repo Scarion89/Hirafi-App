@@ -57,6 +57,29 @@ export default function PhoneScreen() {
         </View>
 
         <Text style={styles.noteText}>Standard rates apply · OTP expires in 60s</Text>
+
+        {/* Social sign-in */}
+        <View style={styles.dividerRow}>
+          <View style={styles.dividerLine} />
+          <Text style={styles.dividerText}>or continue with</Text>
+          <View style={styles.dividerLine} />
+        </View>
+
+        <Pressable
+          style={styles.appleBtn}
+          onPress={() => router.push({ pathname: '/auth/setup', params: { role, phone: 'oauth-' + role } })}
+        >
+          <Text style={styles.appleBtnIcon}>🍎</Text>
+          <Text style={styles.appleBtnText}>Continue with Apple</Text>
+        </Pressable>
+
+        <Pressable
+          style={styles.googleBtn}
+          onPress={() => router.push({ pathname: '/auth/setup', params: { role, phone: 'oauth-' + role } })}
+        >
+          <Text style={styles.googleBtnIcon}>G</Text>
+          <Text style={styles.googleBtnText}>Continue with Google</Text>
+        </Pressable>
       </View>
 
       <View style={styles.footer}>
@@ -183,5 +206,63 @@ const styles = StyleSheet.create({
   },
   sendBtnTextDisabled: {
     color: colors.textLightMuted,
+  },
+  dividerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginTop: spacing.xl,
+    marginBottom: spacing.md,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: colors.borderLight,
+  },
+  dividerText: {
+    fontSize: 12,
+    color: colors.textLightMuted,
+    fontWeight: '500',
+  },
+  appleBtn: {
+    height: 52,
+    borderRadius: radius.lg,
+    backgroundColor: '#000',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    marginBottom: 12,
+  },
+  appleBtnIcon: {
+    fontSize: 18,
+    color: '#fff',
+  },
+  appleBtnText: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#fff',
+  },
+  googleBtn: {
+    height: 52,
+    borderRadius: radius.lg,
+    backgroundColor: '#fff',
+    borderWidth: 1.5,
+    borderColor: colors.borderLight,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    marginBottom: 4,
+  },
+  googleBtnIcon: {
+    fontSize: 18,
+    fontWeight: '900',
+    color: '#4285F4',
+  },
+  googleBtnText: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: colors.text,
   },
 });

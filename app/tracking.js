@@ -38,53 +38,55 @@ const AVATAR_COLORS = ['#3D2E10', '#1A2E1A', '#1A1A2E', '#2E1A2E'];
 
 function CityMap({ workerX, workerY, pulse, arrived }) {
   return (
-    <View style={styles.mapContainer}>
-      {/* Cream background */}
-      {BLOCKS.map((b, i) => (
-        <View key={i} style={[styles.block, { left: b.x, top: b.y, width: b.w, height: b.h, backgroundColor: b.color }]} />
-      ))}
+    <View style={styles.mapContainer} pointerEvents="box-none">
+      {/* Cream background — decorative, no touch */}
+      <View pointerEvents="none" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
+        {BLOCKS.map((b, i) => (
+          <View key={i} style={[styles.block, { left: b.x, top: b.y, width: b.w, height: b.h, backgroundColor: b.color }]} />
+        ))}
 
-      {/* Route dashed line */}
-      {ROUTE.slice(0, -1).map((p, i) => {
-        const next = ROUTE[i + 1];
-        const dx = next.x - p.x; const dy = next.y - p.y;
-        const len = Math.sqrt(dx * dx + dy * dy);
-        const angle = Math.atan2(dy, dx) * (180 / Math.PI);
-        return (
-          <View key={`l${i}`} style={[styles.routeLine, {
-            left: p.x, top: p.y - 1.5, width: len,
-            transform: [{ rotate: `${angle}deg` }],
-          }]} />
-        );
-      })}
+        {/* Route dashed line */}
+        {ROUTE.slice(0, -1).map((p, i) => {
+          const next = ROUTE[i + 1];
+          const dx = next.x - p.x; const dy = next.y - p.y;
+          const len = Math.sqrt(dx * dx + dy * dy);
+          const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+          return (
+            <View key={`l${i}`} style={[styles.routeLine, {
+              left: p.x, top: p.y - 1.5, width: len,
+              transform: [{ rotate: `${angle}deg` }],
+            }]} />
+          );
+        })}
 
-      {/* Home destination pin */}
-      <View style={[styles.destPin, { left: ROUTE[ROUTE.length - 1].x - 16, top: ROUTE[ROUTE.length - 1].y - 36 }]}>
-        <View style={styles.destBubble}><Text style={{ fontSize: 14 }}>🏠</Text></View>
-        <View style={styles.destTail} />
+        {/* Home destination pin */}
+        <View style={[styles.destPin, { left: ROUTE[ROUTE.length - 1].x - 16, top: ROUTE[ROUTE.length - 1].y - 36 }]}>
+          <View style={styles.destBubble}><Text style={{ fontSize: 14 }}>🏠</Text></View>
+          <View style={styles.destTail} />
+        </View>
+
+        {/* Pulse ring */}
+        <Animated.View style={[styles.pulseRing, {
+          left: Animated.subtract(workerX, 20),
+          top: Animated.subtract(workerY, 20),
+          opacity: pulse.interpolate({ inputRange: [0, 1], outputRange: [0.8, 0] }),
+          transform: [{ scale: pulse.interpolate({ inputRange: [0, 1], outputRange: [0.3, 2.4] }) }],
+        }]} />
+
+        {/* Worker marker */}
+        <Animated.View style={[styles.workerMarker, {
+          transform: [
+            { translateX: Animated.subtract(workerX, 18) },
+            { translateY: Animated.subtract(workerY, 18) },
+          ],
+        }]}>
+          <View style={styles.workerBubble}>
+            <Text style={styles.workerBubbleText}>YA</Text>
+          </View>
+        </Animated.View>
       </View>
 
-      {/* Pulse ring */}
-      <Animated.View style={[styles.pulseRing, {
-        left: Animated.subtract(workerX, 20),
-        top: Animated.subtract(workerY, 20),
-        opacity: pulse.interpolate({ inputRange: [0, 1], outputRange: [0.8, 0] }),
-        transform: [{ scale: pulse.interpolate({ inputRange: [0, 1], outputRange: [0.3, 2.4] }) }],
-      }]} />
-
-      {/* Worker marker */}
-      <Animated.View style={[styles.workerMarker, {
-        transform: [
-          { translateX: Animated.subtract(workerX, 18) },
-          { translateY: Animated.subtract(workerY, 18) },
-        ],
-      }]}>
-        <View style={styles.workerBubble}>
-          <Text style={styles.workerBubbleText}>YA</Text>
-        </View>
-      </Animated.View>
-
-      {/* Map controls */}
+      {/* Map controls — interactive */}
       <View style={styles.mapControls}>
         <Pressable style={styles.mapControlBtn}><Text style={styles.mapControlText}>+</Text></Pressable>
         <Pressable style={styles.mapControlBtn}><Text style={styles.mapControlText}>−</Text></Pressable>

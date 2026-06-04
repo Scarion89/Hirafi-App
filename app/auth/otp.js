@@ -52,7 +52,7 @@ export default function OtpScreen() {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      router.push({ pathname: '/auth/setup', params: { role, phone, otp } });
+      router.push({ pathname: '/auth/location', params: { role, phone } });
     }, 1500);
   }
 

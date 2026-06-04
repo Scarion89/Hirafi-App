@@ -146,7 +146,7 @@ export default function Splash() {
 
   return (
     <View style={[styles.root, { paddingBottom: insets.bottom + 24 }]}>
-      <Animated.View style={[styles.glow, { opacity: glowOpacity, transform: [{ scale: glowScale }] }]} />
+      <Animated.View pointerEvents="none" style={[styles.glow, { opacity: glowOpacity, transform: [{ scale: glowScale }] }]} />
 
       <View style={styles.center}>
         <Animated.View style={{ opacity: markOpacity, transform: [{ scale: markScale }], marginBottom: 28 }}>

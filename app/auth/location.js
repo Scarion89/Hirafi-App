@@ -1,15 +1,16 @@
 import React from 'react';
 import { View, Text, Pressable, StyleSheet, StatusBar } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, radius, spacing } from '../../constants/theme';
 
 export default function LocationPermission() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const { role, phone } = useLocalSearchParams();
 
-  const allow = () => router.replace('/(tabs)');
-  const manual = () => router.replace('/(tabs)');
+  const allow = () => router.push({ pathname: '/auth/setup', params: { role, phone } });
+  const manual = () => router.push({ pathname: '/auth/setup', params: { role, phone } });
 
   return (
     <View style={[styles.root, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>

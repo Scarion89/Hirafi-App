@@ -70,7 +70,7 @@ export default function Splash() {
         toValue: 1,
         duration: 520,
         delay: c.delay,
-        easing: Easing.out(Easing.cubic),
+        easing: Easing.out(Easing.quad),
         useNativeDriver: false, // strokeDashoffset needs false
       })
     );
@@ -118,8 +118,8 @@ export default function Splash() {
       Animated.delay(1800),
       Animated.loop(
         Animated.sequence([
-          Animated.timing(glowOpacity, { toValue: 0.55, duration: 1600, easing: Easing.inOut(Easing.sine), useNativeDriver: true }),
-          Animated.timing(glowOpacity, { toValue: 1, duration: 1600, easing: Easing.inOut(Easing.sine), useNativeDriver: true }),
+          Animated.timing(glowOpacity, { toValue: 0.55, duration: 1600, easing: Easing.inOut(Easing.quad), useNativeDriver: true }),
+          Animated.timing(glowOpacity, { toValue: 1, duration: 1600, easing: Easing.inOut(Easing.quad), useNativeDriver: true }),
         ])
       ),
     ]);

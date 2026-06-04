@@ -152,7 +152,7 @@ export default function WorkerDashboard() {
         {/* New job request banner */}
         <Pressable
           style={[styles.newJobBanner, !isOnline && styles.newJobBannerDimmed]}
-          onPress={() => isOnline && router.push('/worker-app/job-request')}
+          onPress={() => isOnline && router.push('/worker-app/incoming')}
           disabled={!isOnline}
         >
           <Text style={[styles.newJobTitle, !isOnline && styles.dimmedText]}>🔔 New job request!</Text>
@@ -165,18 +165,38 @@ export default function WorkerDashboard() {
             </View>
           )}
         </Pressable>
+
+        {/* Quick nav */}
+        <View style={styles.quickNav}>
+          <Pressable style={styles.quickNavBtn} onPress={() => router.push('/worker-app/wallet')}>
+            <Text style={styles.quickNavIcon}>💰</Text>
+            <Text style={styles.quickNavLabel}>Wallet</Text>
+          </Pressable>
+          <Pressable style={styles.quickNavBtn} onPress={() => router.push('/worker-app/jobs')}>
+            <Text style={styles.quickNavIcon}>📋</Text>
+            <Text style={styles.quickNavLabel}>Jobs</Text>
+          </Pressable>
+          <Pressable style={styles.quickNavBtn} onPress={() => router.push('/worker-app/kyc')}>
+            <Text style={styles.quickNavIcon}>🛡️</Text>
+            <Text style={styles.quickNavLabel}>KYC</Text>
+          </Pressable>
+          <Pressable style={styles.quickNavBtn} onPress={() => router.replace('/(tabs)')}>
+            <Text style={styles.quickNavIcon}>🏠</Text>
+            <Text style={styles.quickNavLabel}>Customer</Text>
+          </Pressable>
+        </View>
       </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: colors.bg },
+  root: { flex: 1, backgroundColor: colors.dark },
 
   topBar: {
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
     paddingHorizontal: spacing.lg, paddingVertical: spacing.md,
-    borderBottomWidth: 1, borderBottomColor: colors.border,
+    borderBottomWidth: 1, borderBottomColor: colors.borderLight,
   },
   topLeft: { flexDirection: 'row', alignItems: 'center', gap: 12, flex: 1 },
   wordmark: {
@@ -184,18 +204,18 @@ const styles = StyleSheet.create({
     letterSpacing: -0.5,
   },
   workerInfo: { flex: 1 },
-  workerName: { fontSize: 14, fontWeight: '700', color: colors.text },
-  workerSpecialty: { fontSize: 11, color: colors.textMuted, marginTop: 1 },
+  workerName: { fontSize: 14, fontWeight: '700', color: colors.textLight },
+  workerSpecialty: { fontSize: 11, color: colors.textLightMuted, marginTop: 1 },
   topRight: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   bellBtn: {
-    width: 38, height: 38, backgroundColor: colors.bgCard, borderRadius: 19,
+    width: 38, height: 38, backgroundColor: colors.darkCard, borderRadius: 19,
     alignItems: 'center', justifyContent: 'center', position: 'relative',
-    borderWidth: 1, borderColor: colors.border,
+    borderWidth: 1, borderColor: colors.borderLight,
   },
   bellEmoji: { fontSize: 16 },
   bellDot: {
     position: 'absolute', top: 5, right: 5, width: 9, height: 9,
-    borderRadius: 5, backgroundColor: colors.primary, borderWidth: 2, borderColor: colors.bg,
+    borderRadius: 5, backgroundColor: colors.primary, borderWidth: 2, borderColor: colors.dark,
   },
   avatarCircle: {
     width: 38, height: 38, borderRadius: 19, backgroundColor: colors.primaryMuted,
@@ -207,7 +227,7 @@ const styles = StyleSheet.create({
   statusRow: {
     flexDirection: 'row', alignItems: 'center', gap: 10,
     paddingHorizontal: spacing.lg, paddingVertical: spacing.sm,
-    backgroundColor: colors.bgCard, borderBottomWidth: 1, borderBottomColor: colors.border,
+    backgroundColor: colors.darkCard, borderBottomWidth: 1, borderBottomColor: colors.borderLight,
   },
   statusChip: {
     flexDirection: 'row', alignItems: 'center', gap: 6,
@@ -215,17 +235,17 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
   },
   statusChipOnline: {
-    backgroundColor: 'rgba(76, 175, 80, 0.08)',
+    backgroundColor: 'rgba(122,140,106,0.12)',
     borderColor: colors.success,
   },
   statusChipOffline: {
-    backgroundColor: colors.bgMuted,
-    borderColor: colors.border,
+    backgroundColor: colors.darkMuted,
+    borderColor: colors.borderLight,
   },
   statusDotChip: { width: 7, height: 7, borderRadius: 4 },
   statusChipText: { fontSize: 13, fontWeight: '700' },
   toggle: { marginLeft: 4, transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] },
-  offlineHint: { fontSize: 12, color: colors.textMuted, flex: 1 },
+  offlineHint: { fontSize: 12, color: colors.textLightMuted, flex: 1 },
 
   earningsCard: {
     marginHorizontal: spacing.lg, marginTop: spacing.md, marginBottom: spacing.md,
@@ -246,53 +266,65 @@ const styles = StyleSheet.create({
 
   goalCard: {
     marginHorizontal: spacing.lg, marginBottom: spacing.md,
-    backgroundColor: colors.bgCard, borderRadius: radius.lg, padding: spacing.md,
-    borderWidth: 1, borderColor: colors.border,
+    backgroundColor: colors.darkCard, borderRadius: radius.lg, padding: spacing.md,
+    borderWidth: 1, borderColor: colors.borderLight,
   },
   goalRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 },
-  goalLabel: { fontSize: 10, fontWeight: '700', color: colors.textMuted, letterSpacing: 1.2 },
-  goalVal: { fontSize: 13, fontWeight: '700', color: colors.text },
-  progressBg: { height: 6, backgroundColor: colors.bgMuted, borderRadius: 3 },
+  goalLabel: { fontSize: 10, fontWeight: '700', color: colors.textLightMuted, letterSpacing: 1.2 },
+  goalVal: { fontSize: 13, fontWeight: '700', color: colors.textLight },
+  progressBg: { height: 6, backgroundColor: colors.darkMuted, borderRadius: 3 },
   progressFill: { height: 6, backgroundColor: colors.primary, borderRadius: 3 },
 
   tabs: { flexDirection: 'row', paddingHorizontal: spacing.lg, gap: 8, marginBottom: spacing.md },
   tab: {
     paddingHorizontal: 16, paddingVertical: 8, borderRadius: radius.pill,
-    borderWidth: 1, borderColor: colors.border,
+    borderWidth: 1, borderColor: colors.borderLight,
   },
-  tabActive: { backgroundColor: colors.primaryMuted, borderColor: colors.primary },
-  tabText: { fontSize: 13, fontWeight: '600', color: colors.textMuted },
+  tabActive: { backgroundColor: 'rgba(232,169,60,0.15)', borderColor: colors.primary },
+  tabText: { fontSize: 13, fontWeight: '600', color: colors.textLightMuted },
   tabTextActive: { color: colors.primary },
 
   jobCard: {
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start',
-    backgroundColor: colors.bgCard, borderRadius: radius.lg, padding: spacing.md,
-    marginBottom: spacing.sm, borderWidth: 1, borderColor: colors.border,
+    backgroundColor: colors.darkCard, borderRadius: radius.lg, padding: spacing.md,
+    marginBottom: spacing.sm, borderWidth: 1, borderColor: colors.borderLight,
   },
   jobLeft: { flexDirection: 'row', gap: spacing.sm, flex: 1 },
   statusDot: { width: 8, height: 8, borderRadius: 4, marginTop: 5 },
-  jobService: { fontSize: 14, fontWeight: '700', color: colors.text },
-  jobCustomer: { fontSize: 12, color: colors.textSub, marginTop: 2 },
-  jobAddr: { fontSize: 11, color: colors.textMuted, marginTop: 2 },
+  jobService: { fontSize: 14, fontWeight: '700', color: colors.textLight },
+  jobCustomer: { fontSize: 12, color: colors.textLightSub, marginTop: 2 },
+  jobAddr: { fontSize: 11, color: colors.textLightMuted, marginTop: 2 },
   jobRight: { alignItems: 'flex-end', gap: 4 },
   jobStatus: { fontSize: 10, fontWeight: '700', letterSpacing: 0.5 },
-  jobTime: { fontSize: 12, color: colors.textMuted },
-  jobPrice: { fontSize: 14, fontWeight: '800', color: colors.text },
+  jobTime: { fontSize: 12, color: colors.textLightMuted },
+  jobPrice: { fontSize: 14, fontWeight: '800', color: colors.primary },
 
   newJobBanner: {
     marginHorizontal: spacing.lg, marginTop: spacing.md,
-    backgroundColor: colors.primaryMuted, borderRadius: radius.lg, padding: spacing.lg,
+    backgroundColor: 'rgba(232,169,60,0.1)', borderRadius: radius.lg, padding: spacing.lg,
     borderWidth: 1, borderColor: colors.primary, overflow: 'hidden',
   },
   newJobBannerDimmed: {
-    borderColor: colors.border, opacity: 0.5,
+    borderColor: colors.borderLight, opacity: 0.5,
   },
   newJobTitle: { fontSize: 16, fontWeight: '800', color: colors.primary },
-  newJobSub: { fontSize: 13, color: colors.textMuted, marginTop: 4 },
-  dimmedText: { color: colors.textMuted },
+  newJobSub: { fontSize: 13, color: colors.textLightMuted, marginTop: 4 },
+  dimmedText: { color: colors.textLightMuted },
   offlineOverlay: {
     position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-    backgroundColor: 'rgba(20,16,8,0.7)', alignItems: 'center', justifyContent: 'center',
+    backgroundColor: 'rgba(14,11,8,0.8)', alignItems: 'center', justifyContent: 'center',
   },
-  offlineOverlayText: { fontSize: 14, fontWeight: '700', color: colors.textMuted },
+  offlineOverlayText: { fontSize: 14, fontWeight: '700', color: colors.textLightMuted },
+
+  quickNav: {
+    flexDirection: 'row', gap: 8, marginHorizontal: spacing.lg, marginTop: spacing.md,
+    paddingBottom: spacing.lg,
+  },
+  quickNavBtn: {
+    flex: 1, backgroundColor: colors.darkCard, borderRadius: radius.lg,
+    paddingVertical: spacing.md, alignItems: 'center', gap: 4,
+    borderWidth: 1, borderColor: colors.borderLight,
+  },
+  quickNavIcon: { fontSize: 20 },
+  quickNavLabel: { fontSize: 10, fontWeight: '700', color: colors.textLightMuted },
 });

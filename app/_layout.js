@@ -10,7 +10,7 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <AuthProvider>
         <BookingsProvider>
-          <StatusBar style="light" />
+          <StatusBar style="dark" />
           <Stack
             screenOptions={{
               headerStyle: { backgroundColor: colors.bg },
@@ -25,18 +25,25 @@ export default function RootLayout() {
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="splash" options={{ headerShown: false }} />
             <Stack.Screen name="auth" options={{ headerShown: false, animation: 'fade' }} />
+            <Stack.Screen name="search" options={{ headerShown: false }} />
             <Stack.Screen name="category/[id]" options={{ title: '' }} />
-            <Stack.Screen name="worker/[id]" options={{ title: 'Worker Profile' }} />
-            <Stack.Screen name="booking/[id]" options={{ title: 'Confirm booking' }} />
+            <Stack.Screen name="worker/[id]" options={{ headerShown: false }} />
+            <Stack.Screen name="booking/describe" options={{ headerShown: false }} />
+            <Stack.Screen name="booking/schedule" options={{ headerShown: false }} />
+            <Stack.Screen name="booking/address" options={{ headerShown: false }} />
+            <Stack.Screen name="booking/[id]" options={{ headerShown: false }} />
+            <Stack.Screen name="booking/matching" options={{ headerShown: false, animation: 'fade' }} />
             <Stack.Screen name="tracking" options={{ headerShown: false }} />
-            <Stack.Screen name="rating" options={{ title: 'Rate your pro', presentation: 'modal' }} />
+            <Stack.Screen name="complete" options={{ headerShown: false }} />
+            <Stack.Screen name="rating" options={{ headerShown: false, presentation: 'modal' }} />
+            <Stack.Screen name="receipt" options={{ headerShown: false }} />
             <Stack.Screen name="worker-app" options={{ headerShown: false }} />
             <Stack.Screen name="admin" options={{ headerShown: false }} />
             <Stack.Screen name="notifications" options={{ headerShown: false }} />
-            <Stack.Screen name="profile/edit" options={{ title: 'Edit Profile', presentation: 'modal', headerShown: false }} />
-            <Stack.Screen name="profile/payment" options={{ title: 'Payment', presentation: 'modal', headerShown: false }} />
-            <Stack.Screen name="profile/addresses" options={{ title: 'Addresses', presentation: 'modal', headerShown: false }} />
-            <Stack.Screen name="profile/help" options={{ title: 'Help', presentation: 'modal', headerShown: false }} />
+            <Stack.Screen name="profile/edit" options={{ presentation: 'modal', headerShown: false }} />
+            <Stack.Screen name="profile/payment" options={{ presentation: 'modal', headerShown: false }} />
+            <Stack.Screen name="profile/addresses" options={{ presentation: 'modal', headerShown: false }} />
+            <Stack.Screen name="profile/help" options={{ presentation: 'modal', headerShown: false }} />
           </Stack>
         </BookingsProvider>
       </AuthProvider>

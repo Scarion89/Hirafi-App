@@ -1,19 +1,19 @@
 import React from 'react';
-import { Text, View, ScrollView, Pressable, StyleSheet } from 'react-native';
+import { Text, View, ScrollView, Pressable, StyleSheet, StatusBar } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { colors, radius, spacing } from '../../constants/theme';
+import { colors, radius, spacing, shadow } from '../../constants/theme';
 import { useBookings } from '../../store/bookings';
 import { useAuth } from '../../store/auth';
 
 const MENU = [
-  { emoji: '👤', label: 'Edit profile', route: '/profile/edit' },
-  { emoji: '💳', label: 'Payment methods', route: '/profile/payment' },
-  { emoji: '📍', label: 'Saved addresses', route: '/profile/addresses' },
-  { emoji: '❤️', label: 'Favorite workers', route: null },
-  { emoji: '🔔', label: 'Notifications', route: '/notifications' },
-  { emoji: '🛡️', label: 'hirafi guarantee', route: null },
-  { emoji: '💬', label: 'Help & support', route: '/profile/help' },
+  { emoji: '👤', label: 'Edit profile',       labelAr: 'تعديل الملف', route: '/profile/edit' },
+  { emoji: '💳', label: 'Payment methods',    labelAr: 'طرق الدفع',   route: '/profile/payment' },
+  { emoji: '📍', label: 'Saved addresses',    labelAr: 'العناوين',     route: '/profile/addresses' },
+  { emoji: '❤️', label: 'Favourite workers',  labelAr: 'المفضلة',     route: null },
+  { emoji: '🔔', label: 'Notifications',       labelAr: 'الإشعارات',   route: '/notifications' },
+  { emoji: '🛡️', label: 'Hirafi guarantee',   labelAr: 'ضمان حرفي',   route: null },
+  { emoji: '💬', label: 'Help & support',      labelAr: 'المساعدة',    route: '/profile/help' },
 ];
 
 export default function Profile() {
@@ -24,20 +24,27 @@ export default function Profile() {
 
   const displayName = user?.name || 'Ahmed Hassan';
   const initials = displayName.split(' ').map((w) => w[0]).join('').toUpperCase().slice(0, 2);
-  const roleBadge = user?.role === 'pro' ? '👷 Pro Account' : '🏠 Customer';
+  const isCustomer = !user?.role || user.role === 'customer';
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: colors.bg }} contentContainerStyle={{ paddingBottom: 32 }}>
-      {/* Hero */}
-      <View style={[styles.hero, { paddingTop: insets.top + 20 }]}>
-        <View style={styles.avatar}>
-          <Text style={styles.avatarText}>{initials}</Text>
+    <ScrollView
+      style={{ flex: 1, backgroundColor: colors.bg }}
+      contentContainerStyle={{ paddingBottom: 40 }}
+    >
+      <StatusBar barStyle="dark-content" backgroundColor={colors.bg} />
+
+      {/* Avatar hero */}
+      <View style={[styles.hero, { paddingTop: insets.top + 24 }]}>
+        <View style={styles.avatarWrap}>
+          <View style={styles.avatar}>
+            <Text style={styles.avatarText}>{initials}</Text>
+          </View>
         </View>
         <Text style={styles.name}>{displayName}</Text>
         <View style={styles.rolePill}>
-          <Text style={styles.roleText}>{roleBadge}</Text>
+          <Text style={styles.roleText}>{isCustomer ? '🏠 Customer · عميل' : '👷 Pro · حرفي'}</Text>
         </View>
-        {user?.phone && <Text style={styles.email}>+20 {user.phone}</Text>}
+        {user?.phone && <Text style={styles.phone}>+20 {user.phone}</Text>}
 
         <View style={styles.statsRow}>
           <View style={styles.stat}>
@@ -46,7 +53,7 @@ export default function Profile() {
           </View>
           <View style={styles.statDiv} />
           <View style={styles.stat}>
-            <Text style={styles.statVal}>4.8</Text>
+            <Text style={styles.statVal}>4.8 ★</Text>
             <Text style={styles.statLabel}>Rating</Text>
           </View>
           <View style={styles.statDiv} />
@@ -58,43 +65,49 @@ export default function Profile() {
       </View>
 
       {/* Menu */}
-      <View style={styles.menu}>
-        {MENU.map((item) => (
+      <View style={styles.menuCard}>
+        {MENU.map((item, idx) => (
           <Pressable
             key={item.label}
-            style={({ pressed }) => [styles.menuRow, pressed && { opacity: 0.6 }]}
+            style={({ pressed }) => [styles.menuRow, idx < MENU.length - 1 && styles.menuRowBorder, pressed && { opacity: 0.6 }]}
             onPress={() => item.route && router.push(item.route)}
           >
             <View style={styles.menuIcon}>
               <Text style={styles.menuEmoji}>{item.emoji}</Text>
             </View>
-            <Text style={styles.menuLabel}>{item.label}</Text>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.menuLabel}>{item.label}</Text>
+              <Text style={styles.menuLabelAr}>{item.labelAr}</Text>
+            </View>
             <Text style={styles.chevron}>›</Text>
           </Pressable>
         ))}
+      </View>
+
+      {/* Log out */}
+      <View style={styles.logoutWrap}>
         <Pressable
-          style={({ pressed }) => [styles.menuRow, pressed && { opacity: 0.6 }]}
+          style={styles.logoutBtn}
           onPress={() => { logout(); router.replace('/auth/welcome'); }}
         >
-          <View style={[styles.menuIcon, { backgroundColor: colors.dangerBg }]}>
-            <Text style={styles.menuEmoji}>🚪</Text>
-          </View>
-          <Text style={[styles.menuLabel, { color: colors.danger }]}>Log out</Text>
+          <Text style={styles.logoutText}>🚪 Log out · تسجيل الخروج</Text>
         </Pressable>
       </View>
 
-      {/* Dev access links */}
+      {/* Dev */}
       <View style={styles.devSection}>
-        <Text style={styles.devLabel}>SWITCH MODE</Text>
-        <Pressable style={styles.devBtn} onPress={() => router.push('/worker-app')}>
-          <Text style={styles.devBtnText}>🔧 Worker App</Text>
-        </Pressable>
-        <Pressable style={styles.devBtn} onPress={() => router.push('/admin')}>
-          <Text style={styles.devBtnText}>📊 Admin Dashboard</Text>
-        </Pressable>
+        <Text style={styles.devLabel}>SWITCH MODE (DEV)</Text>
+        <View style={styles.devRow}>
+          <Pressable style={styles.devBtn} onPress={() => router.push('/worker-app')}>
+            <Text style={styles.devBtnText}>🔧 Worker App</Text>
+          </Pressable>
+          <Pressable style={styles.devBtn} onPress={() => router.push('/admin')}>
+            <Text style={styles.devBtnText}>📊 Admin</Text>
+          </Pressable>
+        </View>
       </View>
 
-      <Text style={styles.version}>hirafi v1.0.0 · Customer App</Text>
+      <Text style={styles.version}>hirafi v1.0.0 · حرفي</Text>
     </ScrollView>
   );
 }
@@ -102,47 +115,74 @@ export default function Profile() {
 const styles = StyleSheet.create({
   hero: {
     backgroundColor: colors.bgCard, alignItems: 'center',
-    paddingBottom: spacing.xl, borderBottomLeftRadius: 24, borderBottomRightRadius: 24,
+    paddingBottom: spacing.xl,
+    borderBottomLeftRadius: 28, borderBottomRightRadius: 28,
     borderBottomWidth: 1, borderColor: colors.border,
+    ...shadow.card,
+  },
+  avatarWrap: {
+    marginBottom: spacing.md,
   },
   avatar: {
-    width: 84, height: 84, borderRadius: 42,
-    backgroundColor: colors.bgMuted,
+    width: 88, height: 88, borderRadius: 20,
+    backgroundColor: colors.walnut,
     alignItems: 'center', justifyContent: 'center',
-    borderWidth: 2, borderColor: colors.primaryMuted,
+    borderWidth: 3, borderColor: colors.primary,
   },
-  avatarText: { fontSize: 28, fontWeight: '800', color: colors.primary },
-  name: { fontSize: 20, fontWeight: '800', color: colors.text, marginTop: spacing.md },
+  avatarText: { fontSize: 30, fontWeight: '900', color: colors.primary },
+  name: { fontSize: 22, fontWeight: '900', color: colors.text },
   rolePill: {
-    marginTop: 6, paddingHorizontal: 12, paddingVertical: 4,
+    marginTop: 6, paddingHorizontal: 14, paddingVertical: 5,
     backgroundColor: colors.primaryMuted, borderRadius: radius.pill,
     borderWidth: 1, borderColor: colors.primary,
   },
-  roleText: { fontSize: 12, fontWeight: '700', color: colors.primary },
-  email: { fontSize: 13, color: colors.textMuted, marginTop: 4 },
+  roleText: { fontSize: 12, fontWeight: '700', color: colors.copper },
+  phone: { fontSize: 13, color: colors.textMuted, marginTop: 5 },
   statsRow: {
     flexDirection: 'row', marginTop: spacing.lg,
-    backgroundColor: colors.bgMuted, borderRadius: radius.lg,
+    backgroundColor: colors.bg, borderRadius: radius.lg,
     paddingVertical: spacing.md, paddingHorizontal: spacing.xl,
     borderWidth: 1, borderColor: colors.border,
   },
   stat: { alignItems: 'center', paddingHorizontal: spacing.lg },
-  statVal: { fontSize: 18, fontWeight: '800', color: colors.text },
+  statVal: { fontSize: 16, fontWeight: '800', color: colors.text },
   statLabel: { fontSize: 11, color: colors.textMuted, marginTop: 2 },
   statDiv: { width: 1, backgroundColor: colors.border },
-  menu: { margin: spacing.lg, backgroundColor: colors.bgCard, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border, overflow: 'hidden' },
-  menuRow: { flexDirection: 'row', alignItems: 'center', padding: spacing.md, gap: spacing.md, borderBottomWidth: 1, borderBottomColor: colors.border },
-  menuIcon: { width: 38, height: 38, borderRadius: radius.md, backgroundColor: colors.bgMuted, alignItems: 'center', justifyContent: 'center' },
+
+  menuCard: {
+    margin: spacing.lg, backgroundColor: colors.bgCard,
+    borderRadius: radius.xl, borderWidth: 1, borderColor: colors.border,
+    overflow: 'hidden',
+    ...shadow.card,
+  },
+  menuRow: { flexDirection: 'row', alignItems: 'center', padding: spacing.md, gap: spacing.md },
+  menuRowBorder: { borderBottomWidth: 1, borderBottomColor: colors.border },
+  menuIcon: {
+    width: 40, height: 40, borderRadius: radius.md,
+    backgroundColor: colors.bgMuted, alignItems: 'center', justifyContent: 'center',
+  },
   menuEmoji: { fontSize: 18 },
-  menuLabel: { flex: 1, fontSize: 15, fontWeight: '600', color: colors.text },
+  menuLabel: { fontSize: 15, fontWeight: '600', color: colors.text },
+  menuLabelAr: { fontSize: 11, color: colors.textMuted, marginTop: 1 },
   chevron: { fontSize: 20, color: colors.textMuted },
-  devSection: { marginHorizontal: spacing.lg, marginBottom: spacing.md, gap: 8 },
-  devLabel: { fontSize: 10, fontWeight: '700', color: colors.textMuted, letterSpacing: 1.2, marginBottom: 4 },
+
+  logoutWrap: { marginHorizontal: spacing.lg, marginBottom: spacing.md },
+  logoutBtn: {
+    height: 50, backgroundColor: colors.dangerBg,
+    borderRadius: radius.lg, alignItems: 'center', justifyContent: 'center',
+    borderWidth: 1, borderColor: colors.danger,
+  },
+  logoutText: { fontSize: 15, fontWeight: '700', color: colors.danger },
+
+  devSection: { marginHorizontal: spacing.lg, marginBottom: spacing.md },
+  devLabel: { fontSize: 10, fontWeight: '700', color: colors.textMuted, letterSpacing: 1.2, marginBottom: 8 },
+  devRow: { flexDirection: 'row', gap: 8 },
   devBtn: {
-    height: 44, backgroundColor: colors.bgCard, borderRadius: radius.lg,
-    alignItems: 'center', justifyContent: 'center',
+    flex: 1, height: 44, backgroundColor: colors.bgCard,
+    borderRadius: radius.lg, alignItems: 'center', justifyContent: 'center',
     borderWidth: 1, borderColor: colors.border,
   },
-  devBtnText: { fontSize: 14, fontWeight: '700', color: colors.textSub },
-  version: { textAlign: 'center', color: colors.textMuted, fontSize: 12, marginBottom: 8 },
+  devBtnText: { fontSize: 13, fontWeight: '700', color: colors.textSub },
+
+  version: { textAlign: 'center', color: colors.textMuted, fontSize: 12 },
 });

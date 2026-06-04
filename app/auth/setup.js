@@ -179,7 +179,7 @@ export default function SetupScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.bg,
+    backgroundColor: colors.dark,
   },
   topBar: {
     height: 52,
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
   },
   backArrow: {
     fontSize: 24,
-    color: colors.text,
+    color: colors.textLight,
   },
   scroll: {
     flex: 1,
@@ -208,12 +208,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: '800',
-    color: colors.text,
+    color: colors.textLight,
     marginBottom: 6,
   },
   subtitle: {
     fontSize: 15,
-    color: colors.textMuted,
+    color: colors.textLightMuted,
   },
   fieldGroup: {
     marginBottom: spacing.xl,
@@ -228,20 +228,20 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 13,
     fontWeight: '600',
-    color: colors.textMuted,
+    color: colors.textLightMuted,
     marginBottom: 8,
     textTransform: 'uppercase',
     letterSpacing: 0.8,
   },
   input: {
     height: 52,
-    backgroundColor: colors.bgCard,
+    backgroundColor: colors.darkCard,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: colors.borderLight,
     borderRadius: radius.md,
     paddingHorizontal: spacing.lg,
     fontSize: 16,
-    color: colors.text,
+    color: colors.textLight,
     fontWeight: '500',
   },
   chipsWrap: {
@@ -254,8 +254,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: radius.pill,
     borderWidth: 1.5,
-    borderColor: colors.border,
-    backgroundColor: colors.bgCard,
+    borderColor: colors.borderLight,
+    backgroundColor: colors.darkCard,
   },
   chipSelected: {
     backgroundColor: colors.primary,
@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
   },
   chipText: {
     fontSize: 14,
-    color: colors.textMuted,
+    color: colors.textLightMuted,
     fontWeight: '600',
   },
   chipTextSelected: {
@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
   footer: {
     paddingHorizontal: spacing.xl,
     paddingTop: spacing.md,
-    backgroundColor: colors.bg,
+    backgroundColor: colors.dark,
     borderTopWidth: 1,
     borderTopColor: colors.border,
   },

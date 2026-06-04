@@ -149,7 +149,7 @@ export default function OtpScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.bg,
+    backgroundColor: colors.dark,
     paddingHorizontal: spacing.xl,
   },
   topBar: {
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
   },
   backArrow: {
     fontSize: 24,
-    color: colors.text,
+    color: colors.textLight,
   },
   content: {
     flex: 1,
@@ -175,12 +175,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: '800',
-    color: colors.text,
+    color: colors.textLight,
     marginBottom: 6,
   },
   subtitle: {
     fontSize: 15,
-    color: colors.textMuted,
+    color: colors.textLightMuted,
   },
   otpRow: {
     marginBottom: 28,
@@ -194,9 +194,9 @@ const styles = StyleSheet.create({
     width: 52,
     height: 60,
     borderRadius: 12,
-    backgroundColor: colors.bgCard,
+    backgroundColor: colors.darkCard,
     borderWidth: 1.5,
-    borderColor: colors.border,
+    borderColor: colors.borderLight,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
   },
   digitBoxFilled: {
     borderColor: colors.borderLight,
-    backgroundColor: colors.bgCardAlt,
+    backgroundColor: colors.darkCard,
   },
   digitText: {
     fontSize: 26,
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
   },
   resendCountdown: {
     fontSize: 14,
-    color: colors.textMuted,
+    color: colors.textLightMuted,
   },
   resendTimer: {
     color: colors.textSub,

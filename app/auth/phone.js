@@ -77,7 +77,7 @@ export default function PhoneScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.bg,
+    backgroundColor: colors.dark,
     paddingHorizontal: spacing.xl,
   },
   topBar: {
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
   },
   backArrow: {
     fontSize: 24,
-    color: colors.text,
+    color: colors.textLight,
   },
   content: {
     flex: 1,
@@ -103,12 +103,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: '800',
-    color: colors.text,
+    color: colors.textLight,
     marginBottom: 6,
   },
   subtitle: {
     fontSize: 15,
-    color: colors.textMuted,
+    color: colors.textLightMuted,
   },
   roleBadge: {
     alignSelf: 'flex-start',
@@ -134,9 +134,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    backgroundColor: colors.bgCard,
+    backgroundColor: colors.darkCard,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: colors.borderLight,
     borderRadius: radius.pill,
     paddingHorizontal: 14,
     paddingVertical: 12,
@@ -146,19 +146,19 @@ const styles = StyleSheet.create({
   },
   dialCode: {
     fontSize: 16,
-    color: colors.text,
+    color: colors.textLight,
     fontWeight: '600',
   },
   phoneInput: {
     flex: 1,
     fontSize: 24,
     fontWeight: '700',
-    color: colors.text,
+    color: colors.textLight,
     paddingVertical: 8,
   },
   noteText: {
     fontSize: 12,
-    color: colors.textMuted,
+    color: colors.textLightMuted,
     marginTop: 4,
   },
   footer: {
@@ -182,6 +182,6 @@ const styles = StyleSheet.create({
     letterSpacing: 0.3,
   },
   sendBtnTextDisabled: {
-    color: colors.textMuted,
+    color: colors.textLightMuted,
   },
 });

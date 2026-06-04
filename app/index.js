@@ -3,5 +3,7 @@ import { useAuth } from '../store/auth';
 
 export default function Index() {
   const { user } = useAuth();
-  return <Redirect href={user ? '/(tabs)' : '/splash'} />;
+  if (!user) return <Redirect href="/splash" />;
+  if (user.role === 'pro') return <Redirect href="/worker-app" />;
+  return <Redirect href="/(tabs)" />;
 }

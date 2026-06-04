@@ -1,7 +1,8 @@
-import { Tabs } from 'expo-router';
+import { Tabs, Redirect } from 'expo-router';
 import { Text, View, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../../constants/theme';
+import { useAuth } from '../../store/auth';
 
 function TabIcon({ emoji, label, focused }) {
   return (
@@ -15,6 +16,10 @@ function TabIcon({ emoji, label, focused }) {
 }
 
 export default function TabsLayout() {
+  const { user } = useAuth();
+  if (!user) return <Redirect href="/splash" />;
+  if (user.role === 'pro') return <Redirect href="/worker-app" />;
+
   return (
     <Tabs
       screenOptions={{

@@ -56,8 +56,8 @@ export default function Pending() {
         <Pressable style={styles.supportBtn} onPress={() => router.push('/profile/help')}>
           <Text style={styles.supportText}>Contact support · تواصل معنا</Text>
         </Pressable>
-        <Pressable style={styles.homeLink} onPress={() => router.replace('/(tabs)')}>
-          <Text style={styles.homeLinkText}>Back to customer app</Text>
+        <Pressable style={styles.homeLink} onPress={() => router.replace('/worker-app')}>
+          <Text style={styles.homeLinkText}>Go to dashboard</Text>
         </Pressable>
       </View>
     </View>

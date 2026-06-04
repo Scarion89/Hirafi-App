@@ -30,7 +30,7 @@ export default function SetupScreen() {
       ...(isPro ? { specialty, area } : { area }),
     });
     if (role === 'pro') {
-      router.replace('/worker-app');
+      router.replace('/worker-app/kyc');
     } else {
       router.replace('/(tabs)');
     }

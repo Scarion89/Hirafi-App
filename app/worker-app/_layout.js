@@ -1,7 +1,12 @@
-import { Stack } from 'expo-router';
+import { Stack, Redirect } from 'expo-router';
 import { colors } from '../../constants/theme';
+import { useAuth } from '../../store/auth';
 
 export default function WorkerAppLayout() {
+  const { user } = useAuth();
+  if (!user) return <Redirect href="/splash" />;
+  if (user.role !== 'pro') return <Redirect href="/(tabs)" />;
+
   return (
     <Stack
       screenOptions={{

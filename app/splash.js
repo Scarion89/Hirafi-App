@@ -1,20 +1,37 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, Pressable, StyleSheet, Animated, Easing } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, Pressable, StyleSheet, Animated, Easing, Platform } from 'react-native';
 import Svg, { Polyline } from 'react-native-svg';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, radius, spacing } from '../constants/theme';
 
-// Chevron path lengths (approx for a 100-unit viewBox)
 const CHEVRON_LENGTH = 220;
-
 const CHEVRONS = [
   { points: '0,88 50,18 100,88', color: '#5A341A', width: 18, delay: 0 },
   { points: '8,80 50,24 92,80',  color: '#B07946', width: 16, delay: 160 },
   { points: '16,72 50,30 84,72', color: '#E8A93C', width: 14, delay: 300 },
 ];
 
-// Animated SVG polyline — draws in using strokeDashoffset
+// Static logo for web (no animated SVG — avoids collapsable crash)
+function StaticMark({ size = 160 }) {
+  return (
+    <Svg width={size} height={size * 0.79} viewBox="-8 8 116 86">
+      {CHEVRONS.map((c, i) => (
+        <Polyline
+          key={i}
+          points={c.points}
+          fill="none"
+          stroke={c.color}
+          strokeWidth={c.width}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      ))}
+    </Svg>
+  );
+}
+
+// Animated draw-in for native only
 function AnimatedChevron({ points, color, strokeWidth, progress }) {
   const AnimatedPolyline = Animated.createAnimatedComponent(Polyline);
   const dashOffset = progress.interpolate({
@@ -38,46 +55,39 @@ function AnimatedChevron({ points, color, strokeWidth, progress }) {
 export default function Splash() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const isWeb = Platform.OS === 'web';
 
-  // Per-chevron draw progress
-  const chevronProgress = useRef(CHEVRONS.map(() => new Animated.Value(0))).current;
-  // Mark scale + opacity (after draw)
-  const markScale   = useRef(new Animated.Value(0.88)).current;
-  const markOpacity = useRef(new Animated.Value(0)).current;
-  // Glow pulse
-  const glowOpacity = useRef(new Animated.Value(0)).current;
-  const glowScale   = useRef(new Animated.Value(0.7)).current;
-  // Wordmark
-  const wordOpacity = useRef(new Animated.Value(0)).current;
-  const wordY       = useRef(new Animated.Value(18)).current;
-  // Arabic
+  const chevronProgress = useRef(CHEVRONS.map(() => new Animated.Value(isWeb ? 1 : 0))).current;
+  const markOpacity  = useRef(new Animated.Value(0)).current;
+  const markScale    = useRef(new Animated.Value(0.88)).current;
+  const glowOpacity  = useRef(new Animated.Value(0)).current;
+  const glowScale    = useRef(new Animated.Value(0.7)).current;
+  const wordOpacity  = useRef(new Animated.Value(0)).current;
+  const wordY        = useRef(new Animated.Value(18)).current;
   const arabicOpacity = useRef(new Animated.Value(0)).current;
-  const arabicY       = useRef(new Animated.Value(12)).current;
-  // Tagline
-  const tagOpacity = useRef(new Animated.Value(0)).current;
-  // Buttons
-  const btnOpacity = useRef(new Animated.Value(0)).current;
-  const btnY       = useRef(new Animated.Value(28)).current;
+  const arabicY      = useRef(new Animated.Value(12)).current;
+  const tagOpacity   = useRef(new Animated.Value(0)).current;
+  const btnOpacity   = useRef(new Animated.Value(0)).current;
+  const btnY         = useRef(new Animated.Value(28)).current;
 
   useEffect(() => {
-    // 1. Fade in mark container
     Animated.timing(markOpacity, { toValue: 1, duration: 200, useNativeDriver: true }).start();
     Animated.spring(markScale, { toValue: 1, tension: 50, friction: 9, useNativeDriver: true }).start();
 
-    // 2. Draw each chevron with stagger
-    const chevronAnims = CHEVRONS.map((c, i) =>
-      Animated.timing(chevronProgress[i], {
-        toValue: 1,
-        duration: 520,
-        delay: c.delay,
-        easing: Easing.out(Easing.quad),
-        useNativeDriver: false, // strokeDashoffset needs false
-      })
-    );
+    const chevronAnims = isWeb
+      ? [] // skip SVG draw-in on web
+      : CHEVRONS.map((c, i) =>
+          Animated.timing(chevronProgress[i], {
+            toValue: 1,
+            duration: 520,
+            delay: c.delay,
+            easing: Easing.out(Easing.quad),
+            useNativeDriver: false,
+          })
+        );
 
-    // 3. After chevrons: glow + wordmark cascade
-    const afterDraw = Animated.sequence([
-      Animated.delay(200),
+    const glowAnim = Animated.sequence([
+      Animated.delay(isWeb ? 100 : 200),
       Animated.parallel([
         Animated.timing(glowOpacity, { toValue: 1, duration: 600, useNativeDriver: true }),
         Animated.spring(glowScale, { toValue: 1, tension: 30, friction: 8, useNativeDriver: true }),
@@ -85,7 +95,7 @@ export default function Splash() {
     ]);
 
     const wordAnim = Animated.sequence([
-      Animated.delay(700),
+      Animated.delay(isWeb ? 200 : 700),
       Animated.parallel([
         Animated.timing(wordOpacity, { toValue: 1, duration: 420, easing: Easing.out(Easing.quad), useNativeDriver: true }),
         Animated.timing(wordY, { toValue: 0, duration: 420, easing: Easing.out(Easing.quad), useNativeDriver: true }),
@@ -93,7 +103,7 @@ export default function Splash() {
     ]);
 
     const arabicAnim = Animated.sequence([
-      Animated.delay(900),
+      Animated.delay(isWeb ? 300 : 900),
       Animated.parallel([
         Animated.timing(arabicOpacity, { toValue: 1, duration: 340, useNativeDriver: true }),
         Animated.timing(arabicY, { toValue: 0, duration: 340, easing: Easing.out(Easing.quad), useNativeDriver: true }),
@@ -101,21 +111,20 @@ export default function Splash() {
     ]);
 
     const tagAnim = Animated.sequence([
-      Animated.delay(1100),
+      Animated.delay(isWeb ? 400 : 1100),
       Animated.timing(tagOpacity, { toValue: 1, duration: 400, useNativeDriver: true }),
     ]);
 
     const btnAnim = Animated.sequence([
-      Animated.delay(1350),
+      Animated.delay(isWeb ? 500 : 1350),
       Animated.parallel([
         Animated.timing(btnOpacity, { toValue: 1, duration: 420, useNativeDriver: true }),
         Animated.spring(btnY, { toValue: 0, tension: 55, friction: 10, useNativeDriver: true }),
       ]),
     ]);
 
-    // Glow loop after initial
     const glowLoop = Animated.sequence([
-      Animated.delay(1800),
+      Animated.delay(isWeb ? 1200 : 1800),
       Animated.loop(
         Animated.sequence([
           Animated.timing(glowOpacity, { toValue: 0.55, duration: 1600, easing: Easing.inOut(Easing.quad), useNativeDriver: true }),
@@ -126,7 +135,7 @@ export default function Splash() {
 
     Animated.parallel([
       ...chevronAnims,
-      afterDraw,
+      glowAnim,
       wordAnim,
       arabicAnim,
       tagAnim,
@@ -137,34 +146,32 @@ export default function Splash() {
 
   return (
     <View style={[styles.root, { paddingBottom: insets.bottom + 24 }]}>
-      {/* Ambient glow behind mark */}
-      <Animated.View
-        style={[styles.glow, {
-          opacity: glowOpacity,
-          transform: [{ scale: glowScale }],
-        }]}
-      />
+      <Animated.View style={[styles.glow, { opacity: glowOpacity, transform: [{ scale: glowScale }] }]} />
 
       <View style={styles.center}>
-        {/* SVG Logo */}
         <Animated.View style={{ opacity: markOpacity, transform: [{ scale: markScale }], marginBottom: 28 }}>
-          <Svg width={160} height={126} viewBox="-8 8 116 86">
-            {CHEVRONS.map((c, i) => (
-              <AnimatedChevron
-                key={i}
-                points={c.points}
-                color={c.color}
-                strokeWidth={c.width}
-                progress={chevronProgress[i]}
-              />
-            ))}
-          </Svg>
+          {isWeb ? (
+            <StaticMark size={160} />
+          ) : (
+            <Svg width={160} height={126} viewBox="-8 8 116 86">
+              {CHEVRONS.map((c, i) => (
+                <AnimatedChevron
+                  key={i}
+                  points={c.points}
+                  color={c.color}
+                  strokeWidth={c.width}
+                  progress={chevronProgress[i]}
+                />
+              ))}
+            </Svg>
+          )}
         </Animated.View>
 
-        {/* Wordmark row */}
         <Animated.View style={[styles.wordmarkRow, { opacity: wordOpacity, transform: [{ translateY: wordY }] }]}>
           <Text style={styles.wordmark}>hirafi</Text>
-          <Text style={styles.wordmarkArabic}>حرفي</Text>
+          <Animated.Text style={[styles.wordmarkArabic, { opacity: arabicOpacity, transform: [{ translateY: arabicY }] }]}>
+            حرفي
+          </Animated.Text>
         </Animated.View>
 
         <Animated.Text style={[styles.tagline, { opacity: tagOpacity }]}>
@@ -172,7 +179,6 @@ export default function Splash() {
         </Animated.Text>
       </View>
 
-      {/* Buttons */}
       <Animated.View style={[styles.bottom, { opacity: btnOpacity, transform: [{ translateY: btnY }] }]}>
         <Pressable
           onPress={() => router.replace('/auth/welcome')}
@@ -194,7 +200,7 @@ export default function Splash() {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: colors.bg,
+    backgroundColor: colors.dark,
     alignItems: 'center',
     justifyContent: 'space-between',
   },
@@ -225,7 +231,7 @@ const styles = StyleSheet.create({
   wordmark: {
     fontSize: 56,
     fontWeight: '900',
-    color: colors.text,
+    color: colors.textLight,
     letterSpacing: -2,
     lineHeight: 60,
   },
@@ -239,7 +245,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '700',
     letterSpacing: 3.5,
-    color: colors.textMuted,
+    color: colors.textLightMuted,
     textAlign: 'center',
   },
   bottom: {
@@ -272,7 +278,7 @@ const styles = StyleSheet.create({
   },
   btnOutlineText: {
     fontSize: 13,
-    color: colors.textMuted,
+    color: colors.textLightMuted,
     fontWeight: '500',
   },
 });

@@ -313,6 +313,7 @@ const styles = StyleSheet.create({
   offlineOverlay: {
     position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
     backgroundColor: 'rgba(14,11,8,0.8)', alignItems: 'center', justifyContent: 'center',
+    pointerEvents: 'none',
   },
   offlineOverlayText: { fontSize: 14, fontWeight: '700', color: colors.textLightMuted },
 

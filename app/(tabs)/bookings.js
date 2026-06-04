@@ -51,7 +51,7 @@ export default function Bookings() {
         ))}
       </View>
 
-      <ScrollView contentContainerStyle={{ padding: spacing.lg, paddingBottom: 32 }}>
+      <ScrollView contentContainerStyle={{ padding: spacing.lg, paddingBottom: 32 }} keyboardShouldPersistTaps="handled">
         {/* LIVE card */}
         {tab === 'upcoming' && hasLive && (
           <Pressable

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Text, View, Pressable, StyleSheet, Animated, Easing } from 'react-native';
+import { Text, View, Pressable, StyleSheet, Animated, Easing, Platform } from 'react-native';
+import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, radius, spacing } from '../constants/theme';
@@ -36,7 +37,52 @@ const BLOCKS = [
 const STEPS = ['Booked', 'En route', 'Working', 'Done'];
 const AVATAR_COLORS = ['#3D2E10', '#1A2E1A', '#1A1A2E', '#2E1A2E'];
 
+const darkMapStyle = [
+  { elementType: 'geometry', stylers: [{ color: '#1C1812' }] },
+  { elementType: 'labels.text.fill', stylers: [{ color: '#9C9489' }] },
+  { elementType: 'labels.text.stroke', stylers: [{ color: '#0E0B08' }] },
+  { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#2C2518' }] },
+  { featureType: 'road.arterial', elementType: 'geometry', stylers: [{ color: '#3A3025' }] },
+  { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#0E0B08' }] },
+  { featureType: 'poi', stylers: [{ visibility: 'off' }] },
+];
+
 function CityMap({ workerX, workerY, pulse, arrived }) {
+  if (Platform.OS !== 'web') {
+    return (
+      <View style={styles.mapContainer}>
+        <MapView
+          provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : undefined}
+          style={{ flex: 1 }}
+          initialRegion={{
+            latitude: 30.0131,
+            longitude: 31.6394,
+            latitudeDelta: 0.02,
+            longitudeDelta: 0.02,
+          }}
+          customMapStyle={darkMapStyle}
+        >
+          <Marker coordinate={{ latitude: 30.0131, longitude: 31.6394 }} title="Your location" />
+          <Marker coordinate={{ latitude: 30.0221, longitude: 31.6494 }} title="Worker" pinColor="#E8A93C" />
+          <Polyline
+            coordinates={[
+              { latitude: 30.0221, longitude: 31.6494 },
+              { latitude: 30.0176, longitude: 31.6444 },
+              { latitude: 30.0131, longitude: 31.6394 },
+            ]}
+            strokeColor="#E8A93C"
+            strokeWidth={3}
+          />
+        </MapView>
+        {/* Map controls */}
+        <View style={styles.mapControls}>
+          <Pressable style={styles.mapControlBtn}><Text style={styles.mapControlText}>+</Text></Pressable>
+          <Pressable style={styles.mapControlBtn}><Text style={styles.mapControlText}>−</Text></Pressable>
+        </View>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.mapContainer} pointerEvents="box-none">
       {/* Cream background — decorative, no touch */}

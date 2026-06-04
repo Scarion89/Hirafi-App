@@ -41,7 +41,7 @@ export default function BookingConfirm() {
         <View style={{ width: 36 }} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
         {/* Worker row */}
         <View style={styles.workerRow}>
           <View style={styles.workerAvatar}>
@@ -191,6 +191,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg, paddingTop: 14,
     backgroundColor: colors.bgCard,
     borderTopWidth: 1, borderTopColor: colors.border,
+    zIndex: 10,
     ...shadow.card,
   },
   confirmBtn: {

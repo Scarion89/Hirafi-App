@@ -3,6 +3,7 @@ import { View, Text, Pressable, StyleSheet, Animated, Dimensions } from 'react-n
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, spacing, radius } from '../../constants/theme';
+import HirafiMark from '../../components/HirafiMark';
 
 const { width: SCREEN_W } = Dimensions.get('window');
 
@@ -122,9 +123,12 @@ export default function WelcomeScreen() {
           { opacity: fadeAnim, transform: [{ translateX: slideAnim }] },
         ]}
       >
-        {/* Icon area */}
+        {/* Icon area — use real mark on step 0, emoji on others */}
         <View style={[styles.iconBox, { backgroundColor: current.iconBg }]}>
-          <Text style={styles.iconText}>{current.icon}</Text>
+          {step === 0
+            ? <HirafiMark size={64} />
+            : <Text style={styles.iconText}>{current.icon}</Text>
+          }
         </View>
 
         {/* Headline */}

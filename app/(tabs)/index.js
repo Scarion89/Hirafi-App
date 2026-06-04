@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, radius, spacing, shadow } from '../../constants/theme';
 import { categories, workers } from '../../data/services';
 import { useAuth } from '../../store/auth';
+import HirafiMark from '../../components/HirafiMark';
 
 function useFadeSlide(delay) {
   var d = delay || 0;
@@ -71,7 +72,7 @@ export default function Home() {
       {/* Top bar */}
       <Animated.View style={[styles.topBar, headerAnim]}>
         <View style={styles.logoRow}>
-          <Text style={styles.logoMark}>⌂</Text>
+          <HirafiMark size={28} />
           <Text style={styles.wordmark}>hirafi</Text>
         </View>
         <View style={styles.topRight}>

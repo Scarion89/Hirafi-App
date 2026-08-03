@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "seedance-prompt-en": {
+      "source": "dexhunter/seedance2-skill",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "0be0a2a478fbe32b0c4fbc6dda4a65d00cd948485f284b44572185035fb14e50"
+    }
+  }
+}
